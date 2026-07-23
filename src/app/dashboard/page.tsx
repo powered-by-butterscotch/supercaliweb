@@ -788,18 +788,18 @@ export default function Dashboard() {
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
                       <tr className="border-b border-white/10 text-gray-400 uppercase font-bold tracking-wider">
-                        <th className="pb-3 w-1/4">User Discord</th>
-                        <th className="pb-3 w-1/5">UCP / Nama IC</th>
-                        <th className="pb-3 w-1/5">Golongan SIM</th>
-                        <th className="pb-3 w-1/6">Pekerjaan</th>
-                        <th className="pb-3 w-1/4 text-right">Tindakan Kelulusan</th>
+                        <th className="pb-3 w-1/6">User Discord</th>
+                        <th className="pb-3 w-1/5">Nama Warga / NIK</th>
+                        <th className="pb-3 w-1/5">Dokumen & Instansi</th>
+                        <th className="pb-3 w-1/4">Tujuan / Alasan Permohonan</th>
+                        <th className="pb-3 w-1/5 text-right">Tindakan Kelulusan</th>
                       </tr>
                     </thead>
                     <tbody>
                       {applications.length === 0 ? (
                         <tr>
                           <td colSpan={5} className="py-8 text-center text-gray-500 font-semibold">
-                            Belum ada berkas pengajuan data diri terdaftar di database Supabase.
+                            Belum ada berkas permohonan terdaftar di database Supabase.
                           </td>
                         </tr>
                       ) : (
@@ -809,20 +809,22 @@ export default function Dashboard() {
                               {applicant.discord_username}
                             </td>
                             <td className="py-4 text-white font-semibold">
-                              {applicant.full_name} ({applicant.nik})
+                              {applicant.full_name}
+                              <span className="block text-[10px] text-gray-400 font-mono">NIK: {applicant.nik}</span>
                             </td>
-                            <td className="py-4 text-gray-300 font-mono">
-                              {applicant.sim_type}
+                            <td className="py-4 text-gray-300">
+                              <span className="font-bold text-white block">{applicant.sim_type}</span>
+                              <span className="text-[10px] text-gray-400">{applicant.occupation}</span>
                             </td>
-                            <td className="py-4 text-gray-400">
-                              {applicant.occupation}
+                            <td className="py-4 text-gray-300 max-w-xs">
+                              <p className="line-clamp-2 text-[11px] leading-relaxed italic">{applicant.sim_number || "Tidak ada rincian tambahan"}</p>
                             </td>
                             <td className="py-4 text-right space-x-2">
                               {applicant.status === "PENDING" ? (
                                 <>
                                   <button 
                                     onClick={() => updateApplicationStatus(applicant.id, "APPROVED")}
-                                    className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 font-bold text-white text-[10px] transition"
+                                    className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 font-bold text-white text-[10px] transition shadow"
                                   >
                                     Setujui (Approve)
                                   </button>
@@ -834,8 +836,8 @@ export default function Dashboard() {
                                   </button>
                                 </>
                               ) : (
-                                <span className={`px-2 py-1 rounded text-[9px] font-black uppercase ${applicant.status === "APPROVED" ? "bg-emerald-500/20 text-emerald-400" : "bg-rose-500/20 text-rose-400"}`}>
-                                  {applicant.status}
+                                <span className={`px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider ${applicant.status === "APPROVED" ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : "bg-rose-500/20 text-rose-400 border border-rose-500/30"}`}>
+                                  ● {applicant.status}
                                 </span>
                               )}
                             </td>
