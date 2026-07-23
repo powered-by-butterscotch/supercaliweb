@@ -8,8 +8,22 @@ import confetti from "canvas-confetti";
 export default function ApplyDataForm() {
   const [step, setStep] = useState(1); // 1: Identitas Warga, 2: Pilih Instansi & Jenis Dokumen, 3: Detail Pengajuan, 4: Berhasil
   
+  // Custom Toast State (No Browser Native Alert)
+  const [toast, setToast] = useState<{ show: boolean; msg: string; type: "error" | "success" }>({
+    show: false,
+    msg: "",
+    type: "error"
+  });
+
+  const triggerToast = (msg: string, type: "error" | "success" = "error") => {
+    setToast({ show: true, msg, type });
+    setTimeout(() => {
+      setToast(prev => ({ ...prev, show: false }));
+    }, 4000);
+  };
+  
   // Data Warga
-  const [fullName, setFullName] = useState("cosmic_frills");
+  const [fullName, setFullName] = useState("");
   const [birthPlace, setBirthPlace] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [gender, setGender] = useState("");
@@ -33,7 +47,7 @@ export default function ApplyDataForm() {
       const user = params.get("user");
       if (user) {
         setDiscordUsername(user);
-        setFullName(user);
+        if (!fullName) setFullName(user);
       }
     }
   }, []);
@@ -50,9 +64,36 @@ export default function ApplyDataForm() {
   }, [targetDepartment]);
 
   const handleNextStep = async () => {
-    if (step < 3) {
-      setStep(prev => prev + 1);
-    } else {
+    // Step 1 Validation: All Identity Fields Mandatory
+    if (step === 1) {
+      if (!fullName.trim()) return triggerToast("Nama Lengkap IC Wajib Diisi!");
+      if (!birthPlace.trim()) return triggerToast("Tempat Lahir Wajib Diisi!");
+      if (!birthDate.trim()) return triggerToast("Tanggal Lahir Wajib Diisi!");
+      if (!nik.trim()) return triggerToast("Nomor NIK / Paspor Wajib Diisi!");
+      if (!phone.trim()) return triggerToast("Nomor Telepon Kota Wajib Diisi!");
+      if (!gender.trim()) return triggerToast("Jenis Kelamin Wajib Dipilih!");
+      if (!occupation.trim()) return triggerToast("Pekerjaan Saat Ini Wajib Diisi!");
+      if (!ktpAddress.trim()) return triggerToast("Alamat Domisili Kota Wajib Diisi!");
+      
+      setStep(2);
+      return;
+    }
+
+    // Step 2 Validation: Instansi Choice
+    if (step === 2) {
+      if (!targetDepartment) return triggerToast("Pilih Salah Satu Instansi Tujuan!");
+      if (!docCategory) return triggerToast("Pilih Berkas Permohonan Khusus!");
+      
+      setStep(3);
+      return;
+    }
+
+    // Step 3 Validation: Purpose Mandatory
+    if (step === 3) {
+      if (!applicationPurpose.trim()) {
+        return triggerToast("Tujuan & Alasan Permohonan Wajib Dijelaskan!");
+      }
+
       setIsSubmitting(true);
       try {
         const res = await fetch("/api/applications", {
@@ -85,11 +126,11 @@ export default function ApplyDataForm() {
             origin: { y: 0.6 }
           });
         } else {
-          alert("Gagal mengirimkan berkas pengajuan. Silakan periksa kembali isian Anda!");
+          triggerToast("Gagal mengirimkan berkas pengajuan. Silakan coba kembali!");
         }
       } catch (err) {
         console.error(err);
-        alert("Terjadi masalah koneksi ke server!");
+        triggerToast("Terjadi masalah koneksi server!");
       } finally {
         setIsSubmitting(false);
       }
@@ -105,6 +146,20 @@ export default function ApplyDataForm() {
   return (
     <div className="flex-1 flex flex-col justify-center items-center px-4 py-12 min-h-screen bg-[#0b0713]">
       
+      {/* Modern Floating Toast Notification */}
+      {toast.show && (
+        <div className="fixed top-6 right-6 z-50 animate-bounce duration-300">
+          <div className={`px-5 py-3.5 rounded-2xl shadow-2xl backdrop-blur-xl border flex items-center gap-3 text-xs font-bold ${
+            toast.type === "error" 
+              ? "bg-rose-950/80 border-rose-500/50 text-rose-200 shadow-rose-950/50" 
+              : "bg-emerald-950/80 border-emerald-500/50 text-emerald-200 shadow-emerald-950/50"
+          }`}>
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+            <span>{toast.msg}</span>
+          </div>
+        </div>
+      )}
+
       {/* Top Bar Navigation Header */}
       <header className="absolute top-0 left-0 right-0 px-6 py-4 flex items-center justify-between bg-black/40 backdrop-blur-md border-b border-white/5 z-50">
         <div className="flex items-center gap-3">
@@ -194,7 +249,10 @@ export default function ApplyDataForm() {
         {step === 1 && (
           <div className="space-y-4 pt-2">
             <div className="space-y-1">
-              <label className="text-[10px] font-bold text-gray-400 tracking-wider uppercase">NAMA LENGKAP IN-GAME *</label>
+              <label className="text-[10px] font-bold text-gray-300 tracking-wider flex items-center justify-between">
+                <span>NAMA LENGKAP IN-GAME</span>
+                <span className="text-[9px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-extrabold">WAJIB</span>
+              </label>
               <input 
                 type="text" 
                 value={fullName}
@@ -207,7 +265,10 @@ export default function ApplyDataForm() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-gray-400 tracking-wider uppercase">TEMPAT LAHIR *</label>
+                <label className="text-[10px] font-bold text-gray-300 tracking-wider flex items-center justify-between">
+                  <span>TEMPAT LAHIR</span>
+                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-extrabold">WAJIB</span>
+                </label>
                 <input 
                   type="text" 
                   value={birthPlace}
@@ -217,7 +278,10 @@ export default function ApplyDataForm() {
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-gray-400 tracking-wider uppercase">TANGGAL LAHIR *</label>
+                <label className="text-[10px] font-bold text-gray-300 tracking-wider flex items-center justify-between">
+                  <span>TANGGAL LAHIR</span>
+                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-extrabold">WAJIB</span>
+                </label>
                 <input 
                   type="date" 
                   value={birthDate}
@@ -229,7 +293,10 @@ export default function ApplyDataForm() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-gray-400 tracking-wider uppercase">NOMOR NIK / PASPOR *</label>
+                <label className="text-[10px] font-bold text-gray-300 tracking-wider flex items-center justify-between">
+                  <span>NOMOR NIK / PASPOR</span>
+                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-extrabold">WAJIB</span>
+                </label>
                 <input 
                   type="text" 
                   value={nik}
@@ -239,7 +306,10 @@ export default function ApplyDataForm() {
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-gray-400 tracking-wider uppercase">NO. TELEPON KOTA *</label>
+                <label className="text-[10px] font-bold text-gray-300 tracking-wider flex items-center justify-between">
+                  <span>NO. TELEPON KOTA</span>
+                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-extrabold">WAJIB</span>
+                </label>
                 <input 
                   type="text" 
                   value={phone}
@@ -252,7 +322,10 @@ export default function ApplyDataForm() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-gray-400 tracking-wider uppercase">JENIS KELAMIN *</label>
+                <label className="text-[10px] font-bold text-gray-300 tracking-wider flex items-center justify-between">
+                  <span>JENIS KELAMIN</span>
+                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-extrabold">WAJIB</span>
+                </label>
                 <select 
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
@@ -264,7 +337,10 @@ export default function ApplyDataForm() {
                 </select>
               </div>
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-gray-400 tracking-wider uppercase">PEKERJAAN SAAT INI *</label>
+                <label className="text-[10px] font-bold text-gray-300 tracking-wider flex items-center justify-between">
+                  <span>PEKERJAAN SAAT INI</span>
+                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-extrabold">WAJIB</span>
+                </label>
                 <input 
                   type="text" 
                   value={occupation}
@@ -276,7 +352,10 @@ export default function ApplyDataForm() {
             </div>
 
             <div className="space-y-1">
-              <label className="text-[10px] font-bold text-gray-400 tracking-wider uppercase">ALAMAT DOMISILI KOTA *</label>
+              <label className="text-[10px] font-bold text-gray-300 tracking-wider flex items-center justify-between">
+                <span>ALAMAT DOMISILI KOTA</span>
+                <span className="text-[9px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-extrabold">WAJIB</span>
+              </label>
               <input 
                 type="text" 
                 value={ktpAddress}
@@ -292,7 +371,10 @@ export default function ApplyDataForm() {
         {step === 2 && (
           <div className="space-y-5 pt-2">
             <div className="space-y-2">
-              <label className="text-[10px] font-bold text-gray-400 tracking-wider uppercase">TUJUAN LOKET INSTANSI *</label>
+              <label className="text-[10px] font-bold text-gray-300 tracking-wider flex items-center justify-between">
+                <span>TUJUAN LOKET INSTANSI</span>
+                <span className="text-[9px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-extrabold">WAJIB</span>
+              </label>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 
                 {/* Option 1: SCVP (Police) */}
@@ -360,7 +442,10 @@ export default function ApplyDataForm() {
 
             {/* Dynamic Category Selector */}
             <div className="space-y-1 pt-2">
-              <label className="text-[10px] font-bold text-gray-400 tracking-wider uppercase">BERKAS PERMOHONAN KHUSUS *</label>
+              <label className="text-[10px] font-bold text-gray-300 tracking-wider flex items-center justify-between">
+                <span>BERKAS PERMOHONAN KHUSUS</span>
+                <span className="text-[9px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-extrabold">WAJIB</span>
+              </label>
               <select 
                 value={docCategory}
                 onChange={(e) => setDocCategory(e.target.value)}
@@ -398,7 +483,10 @@ export default function ApplyDataForm() {
         {step === 3 && (
           <div className="space-y-4 pt-2">
             <div className="space-y-1">
-              <label className="text-[10px] font-bold text-gray-400 tracking-wider uppercase">TUJUAN & ALASAN PERMOHONAN *</label>
+              <label className="text-[10px] font-bold text-gray-300 tracking-wider flex items-center justify-between">
+                <span>TUJUAN & ALASAN PERMOHONAN</span>
+                <span className="text-[9px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-extrabold">WAJIB</span>
+              </label>
               <textarea 
                 rows={4}
                 value={applicationPurpose}
@@ -409,12 +497,15 @@ export default function ApplyDataForm() {
             </div>
 
             <div className="space-y-1">
-              <label className="text-[10px] font-bold text-gray-400 tracking-wider uppercase">CATATAN TAMBAHAN / KETERANGAN PENDUKUNG</label>
+              <label className="text-[10px] font-bold text-gray-400 tracking-wider flex items-center justify-between">
+                <span>CATATAN TAMBAHAN / KETERANGAN PENDUKUNG</span>
+                <span className="text-[9px] px-1.5 py-0.2 rounded bg-white/10 text-gray-400 font-bold">OPSIONAL</span>
+              </label>
               <input 
                 type="text" 
                 value={additionalNotes}
                 onChange={(e) => setAdditionalNotes(e.target.value)}
-                placeholder="Keterangan tambahan jika ada (opsional)"
+                placeholder="Keterangan tambahan jika ada (opsional, boleh dikosongkan)"
                 className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-purple-500 outline-none text-xs text-white"
               />
             </div>
