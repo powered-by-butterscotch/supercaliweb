@@ -126,11 +126,12 @@ export default function ApplyDataForm() {
             origin: { y: 0.6 }
           });
         } else {
-          triggerToast("Gagal mengirimkan berkas pengajuan. Silakan coba kembali!");
+          const errData = await res.json().catch(() => ({}));
+          triggerToast(errData.error || "Gagal mengirimkan berkas pengajuan. Silakan coba kembali!");
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error(err);
-        triggerToast("Terjadi masalah koneksi server!");
+        triggerToast(err?.message || "Terjadi masalah koneksi server!");
       } finally {
         setIsSubmitting(false);
       }
@@ -146,16 +147,16 @@ export default function ApplyDataForm() {
   return (
     <div className="flex-1 flex flex-col justify-center items-center px-4 py-12 min-h-screen bg-[#0b0713]">
       
-      {/* Modern Floating Toast Notification */}
+      {/* Modern Floating Toast Notification (High Z-Index so it is never hidden) */}
       {toast.show && (
-        <div className="fixed top-6 right-6 z-50 animate-bounce duration-300">
-          <div className={`px-5 py-3.5 rounded-2xl shadow-2xl backdrop-blur-xl border flex items-center gap-3 text-xs font-bold ${
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[9999] animate-bounce duration-300 w-full max-w-md px-4">
+          <div className={`px-5 py-4 rounded-2xl shadow-2xl backdrop-blur-2xl border flex items-center gap-3 text-xs font-black ${
             toast.type === "error" 
-              ? "bg-rose-950/80 border-rose-500/50 text-rose-200 shadow-rose-950/50" 
-              : "bg-emerald-950/80 border-emerald-500/50 text-emerald-200 shadow-emerald-950/50"
+              ? "bg-rose-950/90 border-rose-500 text-rose-200 shadow-rose-950/80" 
+              : "bg-emerald-950/90 border-emerald-500 text-emerald-200 shadow-emerald-950/80"
           }`}>
-            <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
-            <span>{toast.msg}</span>
+            <AlertCircle className="w-5 h-5 shrink-0 text-rose-400" />
+            <span className="leading-snug">{toast.msg}</span>
           </div>
         </div>
       )}
