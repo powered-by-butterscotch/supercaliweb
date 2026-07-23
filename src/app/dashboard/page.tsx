@@ -489,40 +489,40 @@ export default function Dashboard() {
                     
                     <div className="text-center flex-1 px-4">
                       <h2 className="font-extrabold text-2xl tracking-wide uppercase text-slate-950 font-sans font-black">
-                        Pemerintah Kota Supercali
+                        CITY OF SUPERCALI GOVERNMENT
                       </h2>
                       <p className="text-[11px] font-black tracking-widest text-amber-900 font-sans mt-0.5 uppercase">
-                        {selectedDocType === "surat-sehat" && "DINAS KESEHATAN • ARCANE RESCUE CENTER"}
-                        {selectedDocType === "izin-jalan" && "KEPOLISIAN METRO DIVISION • VIBE PATROL SCVP"}
-                        {selectedDocType === "akta-nikah" && "DEWAN SIHIR KOTA • URUSAN CATATAN SIPIL"}
-                        {selectedDocType === "surat-tugas" && "MARKAS BESAR KEPOLISIAN • VIBE PATROL SCVP"}
-                        {selectedDocType === "izin-senjata" && "DIVISI INTELIJEN & LISENSI • VIBE PATROL SCVP"}
+                        {selectedDocType === "surat-sehat" && "DEPARTMENT OF HEALTH • ARCANE RESCUE CENTER (EMS)"}
+                        {selectedDocType === "izin-jalan" && "METROPOLITAN POLICE DEPARTMENT • SCVP SHERIFF DIVISION"}
+                        {selectedDocType === "akta-nikah" && "DEPARTMENT OF JUSTICE • COURT HALL & CIVIL REGISTRY"}
+                        {selectedDocType === "surat-tugas" && "CHIEF OF POLICE HEADQUARTERS • SCVP METRO"}
+                        {selectedDocType === "izin-senjata" && "FIREARMS LICENSING & PERMIT DIVISION • SCVP HO"}
                       </p>
                       <p className="text-[9px] italic text-slate-500 mt-1 font-sans font-medium">
-                        Gedung Balaikota, Jl. Vinewood Raya No. 42, Supercali RP • www.supercali.tech
+                        City Hall Building, 42 Vinewood Boulevard, Supercali State • www.supercali.tech
                       </p>
                     </div>
 
                     <div className="h-16 w-16 flex items-center justify-center font-bold text-3xl border-2 border-amber-800/40 rounded-full shadow-inner bg-amber-500/5">
-                      👑
+                      🦅
                     </div>
                   </div>
 
                   {/* Document Title */}
                   <div className="text-center my-8 space-y-1">
                     <h3 className="font-black text-xl tracking-wider uppercase text-slate-950 font-serif underline decoration-amber-900 decoration-2 underline-offset-4">
-                      {selectedDocType === "surat-sehat" && "SURAT KETERANGAN SEHAT JASMANI"}
-                      {selectedDocType === "izin-jalan" && "SURAT IZIN KENDARAAN & JALAN DINAS"}
-                      {selectedDocType === "akta-nikah" && "AKTA PERNIKAHAN WARGA GEMILANG"}
-                      {selectedDocType === "surat-tugas" && "SURAT TUGAS OPERASI KHUSUS"}
-                      {selectedDocType === "izin-senjata" && "SURAT IZIN KEPEMILIKAN SENJATA API (SA-1)"}
+                      {selectedDocType === "surat-sehat" && "OFFICIAL MEDICAL CLEARANCE & HEALTH CERTIFICATE"}
+                      {selectedDocType === "izin-jalan" && "OFFICIAL COMMERCIAL VEHICLE & ROAD PERMIT"}
+                      {selectedDocType === "akta-nikah" && "CIVIL REGISTRY MARRIAGE CERTIFICATE"}
+                      {selectedDocType === "surat-tugas" && "SPECIAL OPERATION POLICE WARRANT"}
+                      {selectedDocType === "izin-senjata" && "CONCEALED CARRY WEAPON LICENSE (CCW PERMIT)"}
                     </h3>
                     <p className="text-[11px] text-slate-600 font-sans font-bold tracking-widest uppercase">
-                      Nomor: {selectedDocType === "surat-sehat" && "042/ARC/MED-SEHAT/2026"}
-                      {selectedDocType === "izin-jalan" && "911/SCVP/PERIZINAN/2026"}
-                      {selectedDocType === "akta-nikah" && "114/SIHIR/AKTA-NIKAH/2026"}
-                      {selectedDocType === "surat-tugas" && "007/SCVP/OP-KHUSUS/2026"}
-                      {selectedDocType === "izin-senjata" && "357/SCVP/IZIN-SENJATA/2026"}
+                      Permit No: {selectedDocType === "surat-sehat" && "042/EMS/MED-CLEARANCE/2026"}
+                      {selectedDocType === "izin-jalan" && "911/SCVP/ROAD-PERMIT/2026"}
+                      {selectedDocType === "akta-nikah" && "114/DOJ/CIVIL-MARRIAGE/2026"}
+                      {selectedDocType === "surat-tugas" && "007/SCVP/WARRANT/2026"}
+                      {selectedDocType === "izin-senjata" && "357/SCVP/CCW-LICENSE/2026"}
                     </p>
                   </div>
 
