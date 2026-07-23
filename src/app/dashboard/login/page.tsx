@@ -63,7 +63,7 @@ export default function DiscordLoginPortal() {
                     setErrorMsg("");
                     const host = window.location.host;
                     const protocol = window.location.protocol;
-                    const clientId = "1261605335028043818"; // Live Client ID fallback template placeholder
+                    const clientId = "1526047021654609970";
                     const redirectUri = encodeURIComponent(`${protocol}//${host}/api/auth/discord`);
                     window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=identify&state=admin`;
                   }}
@@ -86,7 +86,7 @@ export default function DiscordLoginPortal() {
                     setErrorMsg("");
                     const host = window.location.host;
                     const protocol = window.location.protocol;
-                    const clientId = "1261605335028043818";
+                    const clientId = "1526047021654609970";
                     const redirectUri = encodeURIComponent(`${protocol}//${host}/api/auth/discord`);
                     window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=identify&state=staff`;
                   }}
@@ -109,7 +109,7 @@ export default function DiscordLoginPortal() {
                     setErrorMsg("");
                     const host = window.location.host;
                     const protocol = window.location.protocol;
-                    const clientId = "1261605335028043818";
+                    const clientId = "1526047021654609970";
                     const redirectUri = encodeURIComponent(`${protocol}//${host}/api/auth/discord`);
                     window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=identify&state=warga`;
                   }}
