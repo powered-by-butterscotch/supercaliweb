@@ -117,8 +117,8 @@ export default function SuperadminAccountManager() {
   if (!isLoggedIn) {
     return (
       <div className="flex-1 flex flex-col justify-center items-center px-4 py-12 min-h-screen bg-[#0b0713]">
-        <Link href="/dashboard?login_success=true" className="absolute top-6 left-6 text-gray-400 hover:text-white flex items-center gap-1.5 text-sm font-semibold transition">
-          <ArrowLeft className="w-4 h-4" /> Ke Dashboard
+        <Link href="/dashboard/login" className="absolute top-6 left-6 text-gray-400 hover:text-white flex items-center gap-1.5 text-sm font-semibold transition">
+          <ArrowLeft className="w-4 h-4" /> Portal Login
         </Link>
 
         <div className="w-full max-w-md glass rounded-3xl p-8 border border-purple-500/30 shadow-2xl space-y-6">

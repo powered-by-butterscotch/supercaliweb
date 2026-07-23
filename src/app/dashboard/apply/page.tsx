@@ -164,7 +164,7 @@ export default function ApplyDataForm() {
       {/* Top Bar Navigation Header */}
       <header className="absolute top-0 left-0 right-0 px-6 py-4 flex items-center justify-between bg-black/40 backdrop-blur-md border-b border-white/5 z-50">
         <div className="flex items-center gap-3">
-          <Link href="/dashboard?login_success=true" className="p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 transition">
+          <Link href="/dashboard/login" className="p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 transition">
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div>
