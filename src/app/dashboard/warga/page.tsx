@@ -200,115 +200,132 @@ export default function WargaDashboard() {
             </div>
           </div>
 
-          {/* Right Column: A4 Official Document Output Preview */}
+          {/* Right Column: A4 Official Document Output Preview (ONLY VISIBLE WHEN APPROVED) */}
           <div className="lg:col-span-7 flex justify-center">
-            <div className="w-full max-w-[210mm] min-h-[297mm] bg-[#faf8f5] text-slate-900 border-8 border-double border-amber-800/35 shadow-2xl p-8 md:p-12 flex flex-col justify-between font-serif relative overflow-hidden rounded-2xl">
-              
-              {/* Watermark Accent */}
-              <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none">
-                <div className="text-[100px] font-bold rotate-45 border-8 border-slate-950 p-10 rounded-full">SUPERCALI</div>
-              </div>
+            {activeApp && activeApp.status === "APPROVED" ? (
+              <div className="w-full max-w-[210mm] min-h-[297mm] bg-[#faf8f5] text-slate-900 border-8 border-double border-amber-800/35 shadow-2xl p-8 md:p-12 flex flex-col justify-between font-serif relative overflow-hidden rounded-2xl">
+                
+                {/* Watermark Accent */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none">
+                  <div className="text-[100px] font-bold rotate-45 border-8 border-slate-950 p-10 rounded-full">SUPERCALI</div>
+                </div>
 
-              <div>
-                {/* Header */}
-                <div className="flex items-center justify-between border-b-4 border-double border-amber-900 pb-4 mb-6">
-                  <div className="h-14 w-14 rounded-full bg-slate-950 flex items-center justify-center font-bold text-2xl shadow-lg border border-amber-600/30">
-                    ⚕️
+                <div>
+                  {/* Header */}
+                  <div className="flex items-center justify-between border-b-4 border-double border-amber-900 pb-4 mb-6">
+                    <div className="h-14 w-14 rounded-full bg-slate-950 flex items-center justify-center font-bold text-2xl shadow-lg border border-amber-600/30">
+                      ⚕️
+                    </div>
+                    
+                    <div className="text-center flex-1 px-4">
+                      <h2 className="font-extrabold text-xl tracking-wide uppercase text-slate-950 font-sans font-black">
+                        CITY OF SUPERCALI GOVERNMENT
+                      </h2>
+                      <p className="text-[10px] font-black tracking-widest text-amber-900 font-sans mt-0.5 uppercase">
+                        STATE REGISTRY & OFFICIAL PERMIT DIVISION
+                      </p>
+                      <p className="text-[8px] italic text-slate-500 mt-1 font-sans font-medium">
+                        City Hall Building, 42 Vinewood Boulevard, Supercali State • www.supercali.tech
+                      </p>
+                    </div>
+
+                    <div className="h-14 w-14 flex items-center justify-center font-bold text-2xl border-2 border-amber-800/40 rounded-full shadow-inner bg-amber-500/5">
+                      🦅
+                    </div>
                   </div>
-                  
-                  <div className="text-center flex-1 px-4">
-                    <h2 className="font-extrabold text-xl tracking-wide uppercase text-slate-950 font-sans font-black">
-                      CITY OF SUPERCALI GOVERNMENT
-                    </h2>
-                    <p className="text-[10px] font-black tracking-widest text-amber-900 font-sans mt-0.5 uppercase">
-                      STATE REGISTRY & OFFICIAL PERMIT DIVISION
-                    </p>
-                    <p className="text-[8px] italic text-slate-500 mt-1 font-sans font-medium">
-                      City Hall Building, 42 Vinewood Boulevard, Supercali State • www.supercali.tech
+
+                  {/* Document Title */}
+                  <div className="text-center my-6 space-y-1">
+                    <h3 className="font-black text-lg tracking-wider uppercase text-slate-950 font-serif underline decoration-amber-900 decoration-2 underline-offset-4">
+                      {activeApp.sim_type}
+                    </h3>
+                    <p className="text-[10px] text-slate-600 font-sans font-bold tracking-widest uppercase">
+                      Permit ID: {activeApp.id || "042/EMS/MED/2026"}
                     </p>
                   </div>
 
-                  <div className="h-14 w-14 flex items-center justify-center font-bold text-2xl border-2 border-amber-800/40 rounded-full shadow-inner bg-amber-500/5">
-                    🦅
+                  {/* Details Table */}
+                  <div className="space-y-5 text-xs leading-relaxed text-slate-800 font-serif px-2">
+                    <p className="text-justify">
+                      This official state document certifies that the following citizen identity has been registered and verified by the State Government of Supercali Roleplay:
+                    </p>
+
+                    <table className="w-full text-left font-sans text-xs border-collapse ml-2 bg-white/40 border border-slate-200/60 rounded-xl shadow-sm">
+                      <tbody>
+                        <tr className="border-b border-slate-200/60">
+                          <td className="py-2.5 px-3 font-extrabold w-1/3 text-slate-500 uppercase tracking-wider">Nama Lengkap IC</td>
+                          <td className="py-2.5 px-3 text-slate-950 font-extrabold text-xs">
+                            {activeApp.full_name}
+                          </td>
+                        </tr>
+                        <tr className="border-b border-slate-200/60">
+                          <td className="py-2.5 px-3 font-extrabold text-slate-500 uppercase tracking-wider">ID Discord / NIK</td>
+                          <td className="py-2.5 px-3 font-mono text-slate-900 font-bold">
+                            @{activeApp.discord_username} (NIK: {activeApp.nik})
+                          </td>
+                        </tr>
+                        <tr className="border-b border-slate-200/60">
+                          <td className="py-2.5 px-3 font-extrabold text-slate-500 uppercase tracking-wider">Golongan Berkas</td>
+                          <td className="py-2.5 px-3 text-slate-950 font-bold">
+                            {activeApp.sim_type}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="py-2.5 px-3 font-extrabold text-slate-500 uppercase tracking-wider">Status Validasi</td>
+                          <td className="py-2.5 px-3 text-emerald-800 font-black">
+                            ● VALID & APPROVED
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    <div className="pt-1 font-serif">
+                      <p className="font-bold text-slate-900 text-[10px] uppercase tracking-wider font-sans mb-1">Keterangan / Deskripsi Resmi:</p>
+                      <p className="pl-4 border-l-4 border-amber-800 italic text-slate-800 bg-[#f3efe6] p-3 rounded-xl font-serif text-xs">
+                        &ldquo;{activeApp.sim_number || "Dinyatakan sah dan berlaku sesuai hukum pemerintahan kota Supercali."}&rdquo;
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                {/* Document Title */}
-                <div className="text-center my-6 space-y-1">
-                  <h3 className="font-black text-lg tracking-wider uppercase text-slate-950 font-serif underline decoration-amber-900 decoration-2 underline-offset-4">
-                    {activeApp ? activeApp.sim_type : "OFFICIAL STATE CITIZEN PERMIT"}
-                  </h3>
-                  <p className="text-[10px] text-slate-600 font-sans font-bold tracking-widest uppercase">
-                    Permit ID: {activeApp ? (activeApp.id || "042/EMS/MED/2026") : "PERMIT-PENDING"}
+                {/* Signatures */}
+                <div className="flex justify-between items-end mt-10 pt-4 border-t border-slate-200">
+                  <div className="text-center font-sans text-[10px]">
+                    <p className="text-slate-500 mb-1">QR Validasi Asli</p>
+                    <div className="h-14 w-14 border-2 border-slate-800 p-1 mx-auto flex flex-col justify-between">
+                      <div className="flex justify-between"><div className="h-2.5 w-2.5 bg-slate-900"/><div className="h-2.5 w-2.5 bg-slate-900"/></div>
+                      <div className="text-[5px] font-mono leading-none tracking-tighter text-slate-700">SUPERCALI CITY</div>
+                      <div className="flex justify-between"><div className="h-2.5 w-2.5 bg-slate-900"/><div className="h-2.5 w-2.5 bg-slate-900"/></div>
+                    </div>
+                  </div>
+
+                  <div className="text-center font-sans text-xs w-48">
+                    <p className="text-slate-500 mb-1 text-[10px]">City of Supercali</p>
+                    <p className="font-bold text-slate-800 text-xs">Official State Department</p>
+                    <div className="h-8 flex items-center justify-center font-script text-amber-900 font-bold text-sm italic">
+                      Supercali State Seal
+                    </div>
+                    <p className="text-[9px] text-slate-500 border-t border-slate-400 pt-0.5">Verified Government Officer</p>
+                  </div>
+                </div>
+
+              </div>
+            ) : (
+              <div className="w-full glass rounded-3xl p-10 border border-white/10 text-center space-y-4 flex flex-col items-center justify-center min-h-[350px]">
+                <div className="h-16 w-16 bg-purple-600/20 border border-purple-500/30 rounded-2xl flex items-center justify-center text-3xl shadow-lg">
+                  📜
+                </div>
+                <div className="space-y-1 max-w-sm">
+                  <h4 className="font-extrabold text-base text-white">Dokumen Resmi Belum Diterbitkan</h4>
+                  <p className="text-xs text-gray-400 leading-relaxed">
+                    Lembar cetak fisik A4 ini hanya akan tampil setelah pengajuan berkas Anda **di-ACC resmi oleh Petugas Instansi**.
                   </p>
                 </div>
-
-                {/* Details Table */}
-                <div className="space-y-5 text-xs leading-relaxed text-slate-800 font-serif px-2">
-                  <p className="text-justify">
-                    This official state document certifies that the following citizen identity has been registered and verified by the State Government of Supercali Roleplay:
-                  </p>
-
-                  <table className="w-full text-left font-sans text-xs border-collapse ml-2 bg-white/40 border border-slate-200/60 rounded-xl shadow-sm">
-                    <tbody>
-                      <tr className="border-b border-slate-200/60">
-                        <td className="py-2.5 px-3 font-extrabold w-1/3 text-slate-500 uppercase tracking-wider">Nama Lengkap IC</td>
-                        <td className="py-2.5 px-3 text-slate-950 font-extrabold text-xs">
-                          {activeApp ? activeApp.full_name : discordUsername}
-                        </td>
-                      </tr>
-                      <tr className="border-b border-slate-200/60">
-                        <td className="py-2.5 px-3 font-extrabold text-slate-500 uppercase tracking-wider">ID Discord / NIK</td>
-                        <td className="py-2.5 px-3 font-mono text-slate-900 font-bold">
-                          @{activeApp ? activeApp.discord_username : discordUsername} (NIK: {activeApp ? activeApp.nik : "317498129"})
-                        </td>
-                      </tr>
-                      <tr className="border-b border-slate-200/60">
-                        <td className="py-2.5 px-3 font-extrabold text-slate-500 uppercase tracking-wider">Golongan Berkas</td>
-                        <td className="py-2.5 px-3 text-slate-950 font-bold">
-                          {activeApp ? activeApp.sim_type : "Dokumen Resmi"}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="py-2.5 px-3 font-extrabold text-slate-500 uppercase tracking-wider">Status Validasi</td>
-                        <td className="py-2.5 px-3 text-slate-900 font-bold">
-                          {activeApp ? (activeApp.status === "APPROVED" ? "VALID & APPROVED" : "PENDING ACC") : "PERMOHONAN BARU"}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-
-                  <div className="pt-1 font-serif">
-                    <p className="font-bold text-slate-900 text-[10px] uppercase tracking-wider font-sans mb-1">Keterangan / Deskripsi Resmi:</p>
-                    <p className="pl-4 border-l-4 border-amber-800 italic text-slate-800 bg-[#f3efe6] p-3 rounded-xl font-serif text-xs">
-                      &ldquo;{activeApp ? (activeApp.sim_number || "Dinyatakan sah dan berlaku sesuai hukum pemerintahan kota Supercali.") : "Belum ada rekomendasi permohonan."}&rdquo;
-                    </p>
-                  </div>
-                </div>
+                <span className="text-[10px] font-bold px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300">
+                  ● Status: Menunggu Approval Officer
+                </span>
               </div>
-
-              {/* Signatures */}
-              <div className="flex justify-between items-end mt-10 pt-4 border-t border-slate-200">
-                <div className="text-center font-sans text-[10px]">
-                  <p className="text-slate-500 mb-1">QR Validasi Asli</p>
-                  <div className="h-14 w-14 border-2 border-slate-800 p-1 mx-auto flex flex-col justify-between">
-                    <div className="flex justify-between"><div className="h-2.5 w-2.5 bg-slate-900"/><div className="h-2.5 w-2.5 bg-slate-900"/></div>
-                    <div className="text-[5px] font-mono leading-none tracking-tighter text-slate-700">SUPERCALI CITY</div>
-                    <div className="flex justify-between"><div className="h-2.5 w-2.5 bg-slate-900"/><div className="h-2.5 w-2.5 bg-slate-900"/></div>
-                  </div>
-                </div>
-
-                <div className="text-center font-sans text-xs w-48">
-                  <p className="text-slate-500 mb-1 text-[10px]">City of Supercali</p>
-                  <p className="font-bold text-slate-800 text-xs">Official State Department</p>
-                  <div className="h-8 flex items-center justify-center font-script text-amber-900 font-bold text-sm italic">
-                    Supercali State Seal
-                  </div>
-                  <p className="text-[9px] text-slate-500 border-t border-slate-400 pt-0.5">Verified Government Officer</p>
-                </div>
-              </div>
-
-            </div>
+            )}
           </div>
 
         </div>
