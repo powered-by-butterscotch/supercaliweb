@@ -21,17 +21,53 @@ export default function ApplyDataForm() {
   
   const [simType, setSimType] = useState("SIM A (Mobil)");
   const [simNumber, setSimNumber] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleNextStep = () => {
+  const handleNextStep = async () => {
     if (step < 3) {
       setStep(prev => prev + 1);
     } else {
-      setStep(4);
-      confetti({
-        particleCount: 150,
-        spread: 70,
-        origin: { y: 0.6 }
-      });
+      setIsSubmitting(true);
+      try {
+        const queryParams = new URLSearchParams(window.location.search);
+        const discordUser = queryParams.get("user") || "cosmic_frills";
+
+        const res = await fetch("/api/applications", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            discord_username: discordUser,
+            full_name: fullName,
+            birth_place: birthPlace,
+            birth_date: birthDate,
+            gender: gender,
+            phone: phone,
+            nik: nik,
+            ktp_address: ktpAddress,
+            occupation: occupation,
+            sim_type: simType,
+            sim_number: simNumber
+          })
+        });
+
+        if (res.ok) {
+          setStep(4);
+          confetti({
+            particleCount: 150,
+            spread: 70,
+            origin: { y: 0.6 }
+          });
+        } else {
+          alert("Gagal mengirim berkas pengajuan. Silakan coba kembali!");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Terjadi kesalahan jaringan!");
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -294,9 +330,10 @@ export default function ApplyDataForm() {
 
             <button 
               onClick={handleNextStep}
-              className="px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 font-extrabold text-white text-xs flex items-center gap-1.5 shadow-md shadow-purple-500/10 transition"
+              disabled={isSubmitting}
+              className={`px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 font-extrabold text-white text-xs flex items-center gap-1.5 shadow-md shadow-purple-500/10 transition ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
             >
-              {step === 3 ? "Simpan Data Diri" : "Lanjutkan"}
+              {isSubmitting ? "Menyimpan..." : (step === 3 ? "Simpan Data Diri" : "Lanjutkan")}
               <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>

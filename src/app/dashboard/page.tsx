@@ -53,6 +53,23 @@ interface DonationInvoice {
   created_at: string;
 }
 
+interface WhitelistApplication {
+  id: string;
+  discord_username: string;
+  full_name: string;
+  birth_place: string;
+  birth_date: string;
+  gender: string;
+  phone: string;
+  nik: string;
+  ktp_address: string;
+  occupation: string;
+  sim_type: string;
+  sim_number: string;
+  status: string;
+  created_at: string;
+}
+
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("docs"); // docs, scvp, arc, rizz
   const [searchQuery, setSearchQuery] = useState("");
@@ -61,6 +78,7 @@ export default function Dashboard() {
   
   // Dynamic Real-time DB State
   const [donations, setDonations] = useState<DonationInvoice[]>([]);
+  const [applications, setApplications] = useState<WhitelistApplication[]>([]);
 
   // Document states
   const [citizenName, setCitizenName] = useState("Ucup Slebew");
@@ -90,6 +108,7 @@ export default function Dashboard() {
           setUserRole(role);
         }
         fetchDonations();
+        fetchApplications();
       } else {
         // Redirect to Discord portal
         window.location.href = "/dashboard/login";
@@ -122,6 +141,28 @@ export default function Dashboard() {
     if (!error) {
       alert("Status invoice berhasil diubah ke PAID! Data terupdate di database Supabase.");
       fetchDonations();
+    }
+  };
+
+  const fetchApplications = async () => {
+    const { data, error } = await supabase
+      .from("whitelist_applications")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (!error && data) {
+      setApplications(data);
+    }
+  };
+
+  const updateApplicationStatus = async (id: string, status: string) => {
+    const { error } = await supabase
+      .from("whitelist_applications")
+      .update({ status: status })
+      .eq("id", id);
+
+    if (!error) {
+      alert(`Status pengajuan berkas berhasil diubah menjadi ${status}!`);
+      fetchApplications();
     }
   };
 
@@ -380,7 +421,6 @@ export default function Dashboard() {
                   />
                 </div>
               </div>
-
               <button 
                 onClick={handlePrint}
                 className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 font-extrabold text-white text-xs flex items-center justify-center gap-2 shadow-lg shadow-purple-500/10 transition"
@@ -390,51 +430,55 @@ export default function Dashboard() {
               </>
               )}
             </div>
-
             {/* Document Preview (A4 styled, looks like real paper) */}
             <div className="lg:col-span-7 flex justify-center p-2 print-area">
               <div 
                 ref={printRef}
-                className="w-full max-w-[210mm] min-h-[297mm] bg-white text-slate-900 border border-slate-300 shadow-2xl p-10 md:p-14 flex flex-col justify-between font-serif relative"
+                className="w-full max-w-[210mm] min-h-[297mm] bg-[#faf8f5] text-slate-900 border-8 border-double border-amber-800/35 shadow-2xl p-10 md:p-14 flex flex-col justify-between font-serif relative overflow-hidden"
               >
+                {/* Vintage Watermark Accent */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none">
+                  <div className="text-[120px] font-bold rotate-45 border-8 border-slate-950 p-10 rounded-full">SUPERCALI</div>
+                </div>
+
                 <div>
                   {/* Kop Surat Header */}
-                  <div className="flex items-center justify-between border-b-4 border-double border-slate-900 pb-5 mb-8">
-                    <div className="h-14 w-14 rounded-xl bg-slate-900 flex items-center justify-center font-bold text-2xl text-white">
-                      {selectedDocType.includes("sehat") || selectedDocType.includes("arc") ? "🏥" : "🚨"}
+                  <div className="flex items-center justify-between border-b-4 border-double border-amber-900 pb-5 mb-8">
+                    <div className="h-16 w-16 rounded-full bg-slate-950 flex items-center justify-center font-bold text-3xl shadow-lg border border-amber-600/30">
+                      {selectedDocType.includes("sehat") || selectedDocType.includes("arc") ? "⚕️" : "⚔️"}
                     </div>
                     
                     <div className="text-center flex-1 px-4">
-                      <h2 className="font-extrabold text-xl tracking-wide uppercase text-slate-900 font-sans">
+                      <h2 className="font-extrabold text-2xl tracking-wide uppercase text-slate-950 font-sans font-black">
                         Pemerintah Kota Supercali
                       </h2>
-                      <p className="text-[11px] font-bold tracking-widest text-slate-700 font-sans mt-0.5">
+                      <p className="text-[11px] font-black tracking-widest text-amber-900 font-sans mt-0.5 uppercase">
                         {selectedDocType === "surat-sehat" && "DINAS KESEHATAN • ARCANE RESCUE CENTER"}
                         {selectedDocType === "izin-jalan" && "KEPOLISIAN METRO DIVISION • VIBE PATROL SCVP"}
                         {selectedDocType === "akta-nikah" && "DEWAN SIHIR KOTA • URUSAN CATATAN SIPIL"}
                         {selectedDocType === "surat-tugas" && "MARKAS BESAR KEPOLISIAN • VIBE PATROL SCVP"}
                         {selectedDocType === "izin-senjata" && "DIVISI INTELIJEN & LISENSI • VIBE PATROL SCVP"}
                       </p>
-                      <p className="text-[9px] italic text-slate-500 mt-1 font-sans">
-                        Jl. Vinewood Raya No. 42, Kota Supercali Roleplay | domain: supercali.tech
+                      <p className="text-[9px] italic text-slate-500 mt-1 font-sans font-medium">
+                        Gedung Balaikota, Jl. Vinewood Raya No. 42, Supercali RP • www.supercali.tech
                       </p>
                     </div>
 
-                    <div className="h-14 w-14 flex items-center justify-center font-bold text-2xl border-2 border-slate-800 rounded">
-                      📜
+                    <div className="h-16 w-16 flex items-center justify-center font-bold text-3xl border-2 border-amber-800/40 rounded-full shadow-inner bg-amber-500/5">
+                      👑
                     </div>
                   </div>
 
                   {/* Document Title */}
-                  <div className="text-center my-8">
-                    <h3 className="font-black text-lg underline tracking-wide uppercase text-slate-900">
+                  <div className="text-center my-8 space-y-1">
+                    <h3 className="font-black text-xl tracking-wider uppercase text-slate-950 font-serif underline decoration-amber-900 decoration-2 underline-offset-4">
                       {selectedDocType === "surat-sehat" && "SURAT KETERANGAN SEHAT JASMANI"}
                       {selectedDocType === "izin-jalan" && "SURAT IZIN KENDARAAN & JALAN DINAS"}
                       {selectedDocType === "akta-nikah" && "AKTA PERNIKAHAN WARGA GEMILANG"}
                       {selectedDocType === "surat-tugas" && "SURAT TUGAS OPERASI KHUSUS"}
                       {selectedDocType === "izin-senjata" && "SURAT IZIN KEPEMILIKAN SENJATA API (SA-1)"}
                     </h3>
-                    <p className="text-xs text-slate-600 mt-1 font-sans">
+                    <p className="text-[11px] text-slate-600 font-sans font-bold tracking-widest uppercase">
                       Nomor: {selectedDocType === "surat-sehat" && "042/ARC/MED-SEHAT/2026"}
                       {selectedDocType === "izin-jalan" && "911/SCVP/PERIZINAN/2026"}
                       {selectedDocType === "akta-nikah" && "114/SIHIR/AKTA-NIKAH/2026"}
@@ -444,35 +488,35 @@ export default function Dashboard() {
                   </div>
 
                   {/* Document Body */}
-                  <div className="space-y-6 text-sm leading-relaxed text-slate-800">
+                  <div className="space-y-6 text-sm leading-relaxed text-slate-800 font-serif text-justify px-2">
                     <p>
                       Yang bertanda tangan di bawah ini, selaku penanggung jawab instansi resmi Kota Supercali Roleplay menerangkan dengan sebenarnya bahwa:
                     </p>
 
-                    <table className="w-full text-left font-sans text-xs border-collapse ml-4">
+                    <table className="w-full text-left font-sans text-xs border-collapse ml-4 bg-white/40 border border-slate-200/60 rounded-xl shadow-sm">
                       <tbody>
-                        <tr className="border-b border-slate-100">
-                          <td className="py-2.5 font-bold w-1/3 text-slate-600">Nama Lengkap IC</td>
-                          <td className="py-2.5 text-slate-900 font-extrabold">{citizenName}</td>
+                        <tr className="border-b border-slate-200/60">
+                          <td className="py-3 px-4 font-extrabold w-1/3 text-slate-500 uppercase tracking-wider">Nama Lengkap IC</td>
+                          <td className="py-3 px-4 text-slate-950 font-extrabold text-sm">{citizenName}</td>
                         </tr>
-                        <tr className="border-b border-slate-100">
-                          <td className="py-2.5 font-bold text-slate-600">ID UCP / Discord</td>
-                          <td className="py-2.5 font-mono text-slate-900">{citizenUCP}</td>
+                        <tr className="border-b border-slate-200/60">
+                          <td className="py-3 px-4 font-extrabold text-slate-500 uppercase tracking-wider">ID UCP / Discord</td>
+                          <td className="py-3 px-4 font-mono text-slate-900 font-bold">{citizenUCP}</td>
                         </tr>
-                        <tr className="border-b border-slate-100">
-                          <td className="py-2.5 font-bold text-slate-600">{customFieldLabel}</td>
-                          <td className="py-2.5 text-slate-900 font-semibold">{customFieldValue}</td>
+                        <tr className="border-b border-slate-200/60">
+                          <td className="py-3 px-4 font-extrabold text-slate-500 uppercase tracking-wider">{customFieldLabel}</td>
+                          <td className="py-3 px-4 text-slate-950 font-bold">{customFieldValue}</td>
                         </tr>
-                        <tr className="border-b border-slate-100">
-                          <td className="py-2.5 font-bold text-slate-600">Tanggal Validasi</td>
-                          <td className="py-2.5 text-slate-900">{docDate}</td>
+                        <tr>
+                          <td className="py-3 px-4 font-extrabold text-slate-500 uppercase tracking-wider">Tanggal Validasi</td>
+                          <td className="py-3 px-4 text-slate-900 font-semibold">{docDate}</td>
                         </tr>
                       </tbody>
                     </table>
 
                     <div className="pt-2 font-serif text-justify">
-                      <p className="font-bold text-slate-900">Deskripsi / Rekomendasi Resmi:</p>
-                      <p className="mt-1.5 pl-4 border-l-2 border-slate-400 italic text-slate-700 bg-slate-50 p-3 rounded">
+                      <p className="font-bold text-slate-900 text-xs uppercase tracking-wider font-sans mb-2">Deskripsi / Rekomendasi Resmi:</p>
+                      <p className="mt-1.5 pl-5 border-l-4 border-amber-800 italic text-slate-800 bg-[#f3efe6] p-4 rounded-xl shadow-inner font-serif leading-relaxed text-[13.5px]">
                         &ldquo;{docDescription}&rdquo;
                       </p>
                     </div>
@@ -752,40 +796,52 @@ export default function Dashboard() {
                       </tr>
                     </thead>
                     <tbody>
-                      {[
-                        { discord: "ucup_slebew", ucp: "ucup_slebew", name: "Ucup Slebew", sim: "SIM A", job: "Warga Sipil", id: 1 },
-                        { discord: "cosmic_frills", ucp: "cosmic_frills", name: "Cosmic Frills", sim: "SIM C", job: "Warga Sipil", id: 2 },
-                        { discord: "mulyono_racing", ucp: "mulyono_racing", name: "Mulyono Racing", sim: "SIM B", job: "Mekanik Rizz", id: 3 }
-                      ].map((applicant) => (
-                        <tr key={applicant.id} className="border-b border-white/5 hover:bg-white/5 transition" id={`applicant-row-${applicant.id}`}>
-                          <td className="py-4 font-bold text-purple-300">{applicant.discord}</td>
-                          <td className="py-4 text-white font-semibold">{applicant.name} ({applicant.ucp})</td>
-                          <td className="py-4 text-gray-300 font-mono">{applicant.sim}</td>
-                          <td className="py-4 text-gray-400">{applicant.job}</td>
-                          <td className="py-4 text-right space-x-2">
-                            <button 
-                              onClick={() => {
-                                alert(`Loloskan warga ${applicant.name}! Data telah disinkronisasikan ke database FiveM & Discord Bot.`);
-                                const row = document.getElementById(`applicant-row-${applicant.id}`);
-                                if (row) row.style.opacity = "0.3";
-                              }}
-                              className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 font-bold text-white text-[10px] transition"
-                            >
-                              Setujui (Approve)
-                            </button>
-                            <button 
-                              onClick={() => {
-                                alert(`Tolak pengajuan warga ${applicant.name}. Permohonan dipindahkan ke log arsip ditolak.`);
-                                const row = document.getElementById(`applicant-row-${applicant.id}`);
-                                if (row) row.style.opacity = "0.3";
-                              }}
-                              className="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 font-bold text-white text-[10px] transition"
-                            >
-                              Tolak (Reject)
-                            </button>
+                      {applications.length === 0 ? (
+                        <tr>
+                          <td colSpan={5} className="py-8 text-center text-gray-500 font-semibold">
+                            Belum ada berkas pengajuan data diri terdaftar di database Supabase.
                           </td>
                         </tr>
-                      ))}
+                      ) : (
+                        applications.map((applicant) => (
+                          <tr key={applicant.id} className="border-b border-white/5 hover:bg-white/5 transition" id={`applicant-row-${applicant.id}`}>
+                            <td className="py-4 font-bold text-purple-300">
+                              {applicant.discord_username}
+                            </td>
+                            <td className="py-4 text-white font-semibold">
+                              {applicant.full_name} ({applicant.nik})
+                            </td>
+                            <td className="py-4 text-gray-300 font-mono">
+                              {applicant.sim_type}
+                            </td>
+                            <td className="py-4 text-gray-400">
+                              {applicant.occupation}
+                            </td>
+                            <td className="py-4 text-right space-x-2">
+                              {applicant.status === "PENDING" ? (
+                                <>
+                                  <button 
+                                    onClick={() => updateApplicationStatus(applicant.id, "APPROVED")}
+                                    className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 font-bold text-white text-[10px] transition"
+                                  >
+                                    Setujui (Approve)
+                                  </button>
+                                  <button 
+                                    onClick={() => updateApplicationStatus(applicant.id, "REJECTED")}
+                                    className="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 font-bold text-white text-[10px] transition"
+                                  >
+                                    Tolak (Reject)
+                                  </button>
+                                </>
+                              ) : (
+                                <span className={`px-2 py-1 rounded text-[9px] font-black uppercase ${applicant.status === "APPROVED" ? "bg-emerald-500/20 text-emerald-400" : "bg-rose-500/20 text-rose-400"}`}>
+                                  {applicant.status}
+                                </span>
+                              )}
+                            </td>
+                          </tr>
+                        ))
+                      )}
                     </tbody>
                   </table>
                 </div>
