@@ -67,13 +67,20 @@ export default function DepartmentDashboard({ params }: { params: { dept?: strin
     }
   };
 
+  // Search filter
+  const [searchTerm, setSearchTerm] = useState("");
+
   const fetchData = async () => {
     try {
       const resApp = await fetch("/api/applications");
       if (resApp.ok) {
         const dataApp = await resApp.json();
-        // Filter by target_department if available
-        setApplications(dataApp);
+        // Filter applications specifically for this department
+        const filtered = dataApp.filter((item: any) => {
+          if (!item.target_department) return true;
+          return item.target_department.toLowerCase() === department.toLowerCase();
+        });
+        setApplications(filtered);
       }
 
       const resStaff = await fetch(`/api/auth/staff?dept=${department}`);
@@ -336,16 +343,21 @@ export default function DepartmentDashboard({ params }: { params: { dept?: strin
 
         {/* Right Column: Citizen Application Approval Manager */}
         <div className="lg:col-span-7 glass rounded-3xl p-6 border border-white/10 space-y-6">
-          <div className="flex justify-between items-center border-b border-white/5 pb-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-white/5 pb-4">
             <div>
               <h3 className="font-extrabold text-lg text-white flex items-center gap-2">
                 <UserCheck className="w-5 h-5 text-emerald-400" /> Permohonan Dokumen Warga
               </h3>
-              <p className="text-xs text-gray-400">Tinjau dan ACC pengajuan berkas warga untuk menerbitkan dokumen resmi.</p>
+              <p className="text-xs text-gray-400">Tinjau dan ACC pengajuan berkas warga khusus instansi ini.</p>
             </div>
-            <span className="text-xs font-bold px-3 py-1 rounded-full bg-purple-600/30 text-purple-200 border border-purple-500/40">
-              Antrean: {applications.length} Berkas
-            </span>
+            
+            <input 
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="🔍 Cari nama / NIK pemohon..."
+              className="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white outline-none focus:border-purple-500 w-full sm:w-48"
+            />
           </div>
 
           <div className="overflow-x-auto">
@@ -359,14 +371,32 @@ export default function DepartmentDashboard({ params }: { params: { dept?: strin
                 </tr>
               </thead>
               <tbody>
-                {applications.length === 0 ? (
+                {applications.filter(app => {
+                  if (!searchTerm) return true;
+                  const term = searchTerm.toLowerCase();
+                  return (
+                    (app.full_name || "").toLowerCase().includes(term) ||
+                    (app.nik || "").toLowerCase().includes(term) ||
+                    (app.discord_username || "").toLowerCase().includes(term)
+                  );
+                }).length === 0 ? (
                   <tr>
                     <td colSpan={4} className="py-8 text-center text-gray-500 font-semibold">
-                      Belum ada permohonan masuk dari warga.
+                      Tidak ada permohonan yang sesuai dengan kata kunci pencarian.
                     </td>
                   </tr>
                 ) : (
-                  applications.map((app) => (
+                  applications
+                    .filter(app => {
+                      if (!searchTerm) return true;
+                      const term = searchTerm.toLowerCase();
+                      return (
+                        (app.full_name || "").toLowerCase().includes(term) ||
+                        (app.nik || "").toLowerCase().includes(term) ||
+                        (app.discord_username || "").toLowerCase().includes(term)
+                      );
+                    })
+                    .map((app) => (
                     <tr key={app.id} className="border-b border-white/5 hover:bg-white/5 transition">
                       <td className="py-4">
                         <span className="font-bold text-white block">{app.full_name}</span>
