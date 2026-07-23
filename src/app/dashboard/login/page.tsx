@@ -47,8 +47,24 @@ export default function DiscordLoginPortal() {
             {(typeof window === "undefined" || (typeof window !== "undefined" && !["admin", "staff"].includes(new URLSearchParams(window.location.search).get("portal") || ""))) && "Portal Layanan Warga Sipil"}
           </h3>
           <p className="text-gray-400 text-xs leading-relaxed">
-            Gunakan akun Discord terverifikasi untuk masuk ke sistem otentikasi dashboard Supercali Roleplay.
+            Pilih jenis portal masuk di bawah ini. Warga menggunakan Discord, sedangkan Pegawai/Direktur Instansi menggunakan Username & Password resmi.
           </p>
+
+          {/* Quick Department Portals */}
+          <div className="grid grid-cols-2 gap-2 pt-1">
+            <Link href="/dashboard/superadmin" className="p-2.5 rounded-xl bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/30 text-[10px] font-bold text-purple-200 text-center transition flex items-center justify-center gap-1">
+              👑 Superadmin
+            </Link>
+            <Link href="/dashboard/police" className="p-2.5 rounded-xl bg-cyan-600/20 hover:bg-cyan-600/30 border border-cyan-500/30 text-[10px] font-bold text-cyan-200 text-center transition flex items-center justify-center gap-1">
+              🚨 SCVP Police
+            </Link>
+            <Link href="/dashboard/emt" className="p-2.5 rounded-xl bg-rose-600/20 hover:bg-rose-600/30 border border-rose-500/30 text-[10px] font-bold text-rose-200 text-center transition flex items-center justify-center gap-1">
+              🏥 ARC Medis
+            </Link>
+            <Link href="/dashboard/doj" className="p-2.5 rounded-xl bg-amber-600/20 hover:bg-amber-600/30 border border-amber-500/30 text-[10px] font-bold text-amber-200 text-center transition flex items-center justify-center gap-1">
+              ⚖️ DOJ / Hukum
+            </Link>
+          </div>
 
           {/* Simulated White-listed Discord accounts list */}
           <div className="space-y-2 text-xs">
