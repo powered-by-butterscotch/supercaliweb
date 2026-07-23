@@ -17,6 +17,8 @@ import {
   UserCheck
 } from "lucide-react";
 
+import { supabase } from "../lib/supabase";
+
 // Mock Data
 const scvpSuspects = [
   { ucp: "ucup_slebew", name: "Ucup Slebew", status: "WANTED", charges: "Pencurian mobil, melanggar batas kecepatan di SCVP Zone.", warnLevel: "HIGH" },
@@ -40,11 +42,25 @@ const scvpVehicles = [
   { plate: "B 777 ARC", ownerName: "Dr. Siti Arcane", ownerUCP: "siti_arcane", model: "Arcane Ambulance Van", status: "RESMI", flags: "NONE" }
 ];
 
+interface DonationInvoice {
+  id: string;
+  discord_username: string;
+  citizen_name: string;
+  items: Array<{ id: string; name: string; quantity: number; price: number }>;
+  total_amount: number;
+  payment_method: string;
+  status: string;
+  created_at: string;
+}
+
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("docs"); // docs, scvp, arc, rizz
   const [searchQuery, setSearchQuery] = useState("");
   const [vehicleSearchQuery, setVehicleSearchQuery] = useState("");
   const [selectedDocType, setSelectedDocType] = useState("surat-sehat"); // surat-sehat, izin-jalan, akta-nikah, surat-tugas
+  
+  // Dynamic Real-time DB State
+  const [donations, setDonations] = useState<DonationInvoice[]>([]);
 
   // Document states
   const [citizenName, setCitizenName] = useState("Ucup Slebew");
@@ -73,6 +89,7 @@ export default function Dashboard() {
         if (role) {
           setUserRole(role);
         }
+        fetchDonations();
       } else {
         // Redirect to Discord portal
         window.location.href = "/dashboard/login";
@@ -85,6 +102,28 @@ export default function Dashboard() {
       }
     }
   }, []);
+
+  const fetchDonations = async () => {
+    const { data, error } = await supabase
+      .from("donations")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (!error && data) {
+      setDonations(data);
+    }
+  };
+
+  const confirmInvoicePayment = async (id: string) => {
+    const { error } = await supabase
+      .from("donations")
+      .update({ status: "PAID" })
+      .eq("id", id);
+    
+    if (!error) {
+      alert("Status invoice berhasil diubah ke PAID! Data terupdate di database Supabase.");
+      fetchDonations();
+    }
+  };
 
   // Preset document types configuration
   const handleDocTypeChange = (type: string) => {
@@ -775,43 +814,46 @@ export default function Dashboard() {
                       </tr>
                     </thead>
                     <tbody>
-                      {[
-                        { ucp: "ucup_slebew", package: "VIP Warga Kece (30 Hari)", amount: "Rp 35.000", status: "PENDING", id: 101 },
-                        { ucp: "mulyono_racing", package: "Paket Sultan Rizz Motor", amount: "Rp 80.000", status: "PAID", id: 102 },
-                        { ucp: "cosmic_frills", package: "VIP Halfped Subscription (30 Hari)", amount: "Rp 125.000", status: "PENDING", id: 103 }
-                      ].map((invoice) => (
-                        <tr key={invoice.id} className="border-b border-white/5 hover:bg-white/5 transition" id={`invoice-row-${invoice.id}`}>
-                          <td className="py-4 font-bold text-amber-300">{invoice.ucp}</td>
-                          <td className="py-4 text-white font-semibold">{invoice.package}</td>
-                          <td className="py-4 text-gray-300 font-mono">{invoice.amount}</td>
-                          <td className="py-4">
-                            <span id={`invoice-badge-${invoice.id}`} className={`px-2 py-0.5 rounded text-[9px] font-black ${
-                              invoice.status === "PENDING" 
-                                ? "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30" 
-                                : "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
-                            }`}>
-                              {invoice.status}
-                            </span>
-                          </td>
-                          <td className="py-4 text-right space-x-2">
-                            {invoice.status === "PENDING" && (
-                              <button 
-                                onClick={() => {
-                                  alert(`Verifikasi Donasi Warga ${invoice.ucp} Berhasil! Benefit item akan terkirim otomatis secara in-game.`);
-                                  const badge = document.getElementById(`invoice-badge-${invoice.id}`);
-                                  if (badge) {
-                                    badge.innerText = "PAID";
-                                    badge.className = "px-2 py-0.5 rounded text-[9px] font-black bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
-                                  }
-                                }}
-                                className="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 font-bold text-slate-900 text-[10px] transition"
-                              >
-                                Verifikasi (Set PAID)
-                              </button>
-                            )}
+                      {donations.length === 0 ? (
+                        <tr>
+                          <td colSpan={5} className="py-8 text-center text-gray-500 font-semibold">
+                            Belum ada invoice donasi terdaftar di database Supabase.
                           </td>
                         </tr>
-                      ))}
+                      ) : (
+                        donations.map((invoice) => (
+                          <tr key={invoice.id} className="border-b border-white/5 hover:bg-white/5 transition" id={`invoice-row-${invoice.id}`}>
+                            <td className="py-4 font-bold text-amber-300">
+                              {invoice.discord_username} <span className="text-[10px] text-gray-500 font-normal">({invoice.citizen_name})</span>
+                            </td>
+                            <td className="py-4 text-white font-semibold">
+                              {invoice.items?.map(it => `${it.name} (x${it.quantity})`).join(", ") || "Paket Donasi"}
+                            </td>
+                            <td className="py-4 text-gray-300 font-mono">
+                              {new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(invoice.total_amount)}
+                            </td>
+                            <td className="py-4">
+                              <span id={`invoice-badge-${invoice.id}`} className={`px-2 py-0.5 rounded text-[9px] font-black ${
+                                invoice.status === "PENDING" 
+                                  ? "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30" 
+                                  : "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                              }`}>
+                                {invoice.status}
+                              </span>
+                            </td>
+                            <td className="py-4 text-right space-x-2">
+                              {invoice.status === "PENDING" && (
+                                <button 
+                                  onClick={() => confirmInvoicePayment(invoice.id)}
+                                  className="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 font-bold text-slate-900 text-[10px] transition"
+                                >
+                                  Verifikasi (Set PAID)
+                                </button>
+                              )}
+                            </td>
+                          </tr>
+                        ))
+                      )}
                     </tbody>
                   </table>
                 </div>

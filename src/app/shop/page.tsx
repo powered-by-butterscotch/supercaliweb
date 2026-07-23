@@ -1,20 +1,6 @@
-"use client";
-
-import { useState } from "react";
-import Link from "next/link";
-import confetti from "canvas-confetti";
-import { 
-  ShoppingBag, 
-  Trash2, 
-  Plus, 
-  Minus, 
-  CreditCard, 
-  Sparkles, 
-  ArrowLeft,
-  X,
-  CheckCircle2,
-  AlertTriangle
-} from "lucide-react";
+import { useEffect } from "react";
+import { supabase } from "../lib/supabase";
+import { initDbSchema } from "../lib/dbInit";
 
 interface Product {
   id: string;
@@ -26,7 +12,7 @@ interface Product {
   badge?: string;
 }
 
-const shopItems: Product[] = [
+const fallbackShopItems: Product[] = [
   {
     id: "vip-villager",
     name: "VIP Warga Kece (30 Hari)",
@@ -90,6 +76,9 @@ const shopItems: Product[] = [
 ];
 
 export default function Shop() {
+  const [shopItems, setShopItems] = useState<Product[]>(fallbackShopItems);
+  const [discordUsername, setDiscordUsername] = useState("");
+  const [citizenNameInput, setCitizenNameInput] = useState("");
   const [cart, setCart] = useState<Record<string, number>>({});
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
@@ -98,18 +87,28 @@ export default function Shop() {
   const [activeShowcaseType, setActiveShowcaseType] = useState<"cars" | "peds">("cars");
   const [selectedItemIndex, setSelectedItemIndex] = useState(0);
 
-  // Showroom Catalog Items for Cars
-  const showcaseCars = [
-    { name: "Koenigsegg Jesko (Tier S+)", speed: "450 km/h", seat: "2 Kursi", bonus: "Kustom Plat Emas", type: "Hypercar", img: "/showcase_car.png" },
-    { name: "McLaren P1 GTR (Tier S)", speed: "420 km/h", seat: "2 Kursi", bonus: "Full Underglow Neon", type: "Race Track", img: "/mclaren_preview.png" },
-    { name: "Porsche 911 GT3 RS (Tier A)", speed: "390 km/h", seat: "2 Kursi", bonus: "Engine Tuning Stage 3", type: "Sport", img: "/showcase_car.png" }
-  ];
+  // Trigger auto migrations on component load
+  useEffect(() => {
+    initDbSchema();
+    fetchShopItems();
+  }, []);
 
-  // Showroom Catalog Items for Peds (Custom Character Skins)
-  const showcasePeds = [
-    { name: "Anime Character Pack (Halfped)", format: ".YTD / .YFT", features: "Dynamic Cloth Physics & Custom Emotes", type: "Kustom Anime", img: "/showcase_ped.png" },
-    { name: "Cyberpunk Streetwear Male/Female", format: ".YTD / .YFT", features: "Glow in the dark textures & custom glass specs", type: "Street Rizz", img: "/cyberpunk_preview.png" }
-  ];
+  const fetchShopItems = async () => {
+    const { data, error } = await supabase.from("shop_items").select("*");
+    if (!error && data && data.length > 0) {
+      // Map properties with gradient fallbacks
+      const mapped = data.map((item: any) => ({
+        id: item.id,
+        name: item.name,
+        price: Number(item.price),
+        category: item.category,
+        description: item.description || "",
+        color: item.category.includes("Car") ? "from-amber-500 to-yellow-500" : "from-purple-500 to-indigo-500",
+        badge: item.badge
+      }));
+      setShopItems(mapped);
+    }
+  };
 
   const addToCart = (id: string) => {
     setCart(prev => ({ ...prev, [id]: (prev[id] || 0) + 1 }));
@@ -152,7 +151,21 @@ export default function Shop() {
     setIsCheckoutOpen(true);
   };
 
-  const confirmPayment = () => {
+  const confirmPayment = async () => {
+    // Insert new donation record to Supabase
+    const purchasedItems = Object.entries(cart).map(([id, qty]) => {
+      const prod = shopItems.find(p => p.id === id);
+      return { id, name: prod?.name, quantity: qty, price: prod?.price };
+    });
+
+    await supabase.from("donations").insert({
+      discord_username: discordUsername || "ucup_slebew",
+      citizen_name: citizenNameInput || "Ucup Sipil",
+      items: purchasedItems,
+      total_amount: getCartTotal(),
+      payment_method: "Tebex QRIS/PayPal"
+    });
+
     setCheckoutStep(2);
     confetti({
       particleCount: 100,
@@ -415,13 +428,27 @@ export default function Shop() {
                     </p>
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="text-[11px] font-bold text-gray-400 tracking-wider block">ID DISCORD ATAU NAMA UCP</label>
-                    <input 
-                      type="text" 
-                      placeholder="Contoh: ucup_surucup#1234"
-                      className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/5 focus:border-amber-400 outline-none text-sm text-white font-medium"
-                    />
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label className="text-[10.5px] font-bold text-gray-400 tracking-wider block">ID DISCORD (UCP)</label>
+                      <input 
+                        type="text" 
+                        value={discordUsername}
+                        onChange={(e) => setDiscordUsername(e.target.value)}
+                        placeholder="Contoh: ucup_slebew"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/5 focus:border-amber-400 outline-none text-xs text-white font-medium"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10.5px] font-bold text-gray-400 tracking-wider block">NAMA KEPALA KELUARGA (IC)</label>
+                      <input 
+                        type="text" 
+                        value={citizenNameInput}
+                        onChange={(e) => setCitizenNameInput(e.target.value)}
+                        placeholder="Contoh: Ucup Surucup"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/5 focus:border-amber-400 outline-none text-xs text-white font-medium"
+                      />
+                    </div>
                   </div>
 
                   <div className="p-4 rounded-xl bg-white/5 border border-white/5 space-y-2 font-mono">
