@@ -145,12 +145,29 @@ export default function Dashboard() {
   };
 
   const fetchApplications = async () => {
-    const { data, error } = await supabase
-      .from("whitelist_applications")
-      .select("*")
-      .order("created_at", { ascending: false });
-    if (!error && data) {
-      setApplications(data);
+    let localSaved: any = null;
+    if (typeof window !== "undefined") {
+      try {
+        const raw = localStorage.getItem("supercali_active_application");
+        if (raw) localSaved = JSON.parse(raw);
+      } catch (e) {}
+    }
+
+    try {
+      const res = await fetch("/api/applications");
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          setApplications(data);
+          return;
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+
+    if (localSaved) {
+      setApplications([localSaved]);
     }
   };
 

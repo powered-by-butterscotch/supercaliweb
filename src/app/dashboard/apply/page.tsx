@@ -119,6 +119,24 @@ export default function ApplyDataForm() {
         });
 
         if (res.ok) {
+          const submittedData = await res.json().catch(() => ({}));
+          const record = submittedData.id ? submittedData : {
+            id: "app_" + Date.now(),
+            discord_username: discordUsername,
+            full_name: fullName,
+            nik: nik,
+            sim_type: `${docCategory} (${targetDepartment.toUpperCase()})`,
+            sim_number: applicationPurpose,
+            status: "PENDING",
+            target_department: targetDepartment
+          };
+
+          if (typeof window !== "undefined") {
+            try {
+              localStorage.setItem("supercali_active_application", JSON.stringify(record));
+            } catch (e) {}
+          }
+
           setStep(4);
           confetti({
             particleCount: 160,
