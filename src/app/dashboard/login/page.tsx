@@ -61,15 +61,18 @@ export default function DiscordLoginPortal() {
                       return;
                     }
                     setErrorMsg("");
-                    alert("Menghubungkan ke API Discord... Mengautentikasi Discord ID kenxzo.mxi [Owner/Admin Kota]");
-                    window.location.href = "/dashboard?login_success=true&role=admin&user=kenxzo.mxi";
+                    const host = window.location.host;
+                    const protocol = window.location.protocol;
+                    const clientId = "1261605335028043818"; // Live Client ID fallback template placeholder
+                    const redirectUri = encodeURIComponent(`${protocol}//${host}/api/auth/discord`);
+                    window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=identify&state=admin`;
                   }}
                   className="w-full py-4 rounded-xl bg-[#5865F2] hover:bg-[#4752C4] font-extrabold text-white text-xs tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/15 transition-all"
                 >
                   <svg className="h-4 w-4 fill-current" viewBox="0 0 127.14 96.36">
                     <path d="M107.7,8.07A105.15,105.15,0,0,0,77.26,0a77.19,77.19,0,0,0-3.3,6.83A96.67,96.67,0,0,0,53.22,6.83,77.19,77.19,0,0,0,49.88,0,105.15,105.15,0,0,0,19.44,8.07C3.66,31.58-1.86,54.65,1,77.53A105.73,105.73,0,0,0,32,96.36a77.7,77.7,0,0,0,6.63-10.85,68.43,68.43,0,0,1-10.4-5c.87-.64,1.71-1.32,2.51-2a75.46,75.46,0,0,0,72.63,0c.8,0.71,1.64,1.39,2.51,2a68.43,68.43,0,0,1-10.4,5,77.7,77.7,0,0,0,6.63,10.85,105.73,105.73,0,0,0,31-18.83C129.87,50.7,123.82,27.82,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53S36.18,40.36,42.45,40.36,53.83,46,53.83,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.24,60,73.24,53S78.41,40.36,84.69,40.36,96.07,46,96.07,53,91,65.69,84.69,65.69Z"/>
                   </svg>
-                  Masuk via Discord Owner (kenxzo.mxi)
+                  Masuk via Discord Owner (Resmi)
                 </button>
               )}
 
@@ -81,15 +84,18 @@ export default function DiscordLoginPortal() {
                       return;
                     }
                     setErrorMsg("");
-                    alert("Menghubungkan ke API Discord... Mengautentikasi Discord ID zyra_founder [Staf Whitelist]");
-                    window.location.href = "/dashboard?login_success=true&role=dinas&user=zyra_founder";
+                    const host = window.location.host;
+                    const protocol = window.location.protocol;
+                    const clientId = "1261605335028043818";
+                    const redirectUri = encodeURIComponent(`${protocol}//${host}/api/auth/discord`);
+                    window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=identify&state=staff`;
                   }}
                   className="w-full py-4 rounded-xl bg-[#5865F2] hover:bg-[#4752C4] font-extrabold text-white text-xs tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/15 transition-all"
                 >
                   <svg className="h-4 w-4 fill-current" viewBox="0 0 127.14 96.36">
                     <path d="M107.7,8.07A105.15,105.15,0,0,0,77.26,0a77.19,77.19,0,0,0-3.3,6.83A96.67,96.67,0,0,0,53.22,6.83,77.19,77.19,0,0,0,49.88,0,105.15,105.15,0,0,0,19.44,8.07C3.66,31.58-1.86,54.65,1,77.53A105.73,105.73,0,0,0,32,96.36a77.7,77.7,0,0,0,6.63-10.85,68.43,68.43,0,0,1-10.4-5c.87-.64,1.71-1.32,2.51-2a75.46,75.46,0,0,0,72.63,0c.8,0.71,1.64,1.39,2.51,2a68.43,68.43,0,0,1-10.4,5,77.7,77.7,0,0,0,6.63,10.85,105.73,105.73,0,0,0,31-18.83C129.87,50.7,123.82,27.82,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53S36.18,40.36,42.45,40.36,53.83,46,53.83,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.24,60,73.24,53S78.41,40.36,84.69,40.36,96.07,46,96.07,53,91,65.69,84.69,65.69Z"/>
                   </svg>
-                  Masuk via Discord Pegawai (zyra_founder)
+                  Masuk via Discord Staf (Resmi)
                 </button>
               )}
 
@@ -101,15 +107,18 @@ export default function DiscordLoginPortal() {
                       return;
                     }
                     setErrorMsg("");
-                    alert("Menghubungkan ke API Discord... Mengautentikasi Discord ID ucup_slebew [Warga Sipil]");
-                    window.location.href = "/dashboard/apply?role=warga&user=ucup_slebew";
+                    const host = window.location.host;
+                    const protocol = window.location.protocol;
+                    const clientId = "1261605335028043818";
+                    const redirectUri = encodeURIComponent(`${protocol}//${host}/api/auth/discord`);
+                    window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=identify&state=warga`;
                   }}
                   className="w-full py-4 rounded-xl bg-[#5865F2] hover:bg-[#4752C4] font-extrabold text-white text-xs tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/15 transition-all"
                 >
                   <svg className="h-4 w-4 fill-current" viewBox="0 0 127.14 96.36">
                     <path d="M107.7,8.07A105.15,105.15,0,0,0,77.26,0a77.19,77.19,0,0,0-3.3,6.83A96.67,96.67,0,0,0,53.22,6.83,77.19,77.19,0,0,0,49.88,0,105.15,105.15,0,0,0,19.44,8.07C3.66,31.58-1.86,54.65,1,77.53A105.73,105.73,0,0,0,32,96.36a77.7,77.7,0,0,0,6.63-10.85,68.43,68.43,0,0,1-10.4-5c.87-.64,1.71-1.32,2.51-2a75.46,75.46,0,0,0,72.63,0c.8,0.71,1.64,1.39,2.51,2a68.43,68.43,0,0,1-10.4,5,77.7,77.7,0,0,0,6.63,10.85,105.73,105.73,0,0,0,31-18.83C129.87,50.7,123.82,27.82,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53S36.18,40.36,42.45,40.36,53.83,46,53.83,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.24,60,73.24,53S78.41,40.36,84.69,40.36,96.07,46,96.07,53,91,65.69,84.69,65.69Z"/>
                   </svg>
-                  Masuk via Discord Warga (ucup_slebew)
+                  Masuk via Discord (Resmi)
                 </button>
               )}
             </div>
