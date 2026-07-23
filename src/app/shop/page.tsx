@@ -1,6 +1,22 @@
-import { useEffect } from "react";
-import { supabase } from "../lib/supabase";
-import { initDbSchema } from "../lib/dbInit";
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import confetti from "canvas-confetti";
+import { 
+  ShoppingBag, 
+  Trash2, 
+  Plus, 
+  Minus, 
+  CreditCard, 
+  Sparkles, 
+  ArrowLeft,
+  X,
+  CheckCircle2,
+  AlertTriangle
+} from "lucide-react";
+import { supabase } from "../../lib/supabase";
+import { initDbSchema } from "../../lib/dbInit";
 
 interface Product {
   id: string;
@@ -86,6 +102,19 @@ export default function Shop() {
   const [showCatalogModal, setShowCatalogModal] = useState(false);
   const [activeShowcaseType, setActiveShowcaseType] = useState<"cars" | "peds">("cars");
   const [selectedItemIndex, setSelectedItemIndex] = useState(0);
+
+  // Showroom Catalog Items for Cars
+  const showcaseCars = [
+    { name: "Koenigsegg Jesko (Tier S+)", speed: "450 km/h", seat: "2 Kursi", bonus: "Kustom Plat Emas", type: "Hypercar", img: "/showcase_car.png" },
+    { name: "McLaren P1 GTR (Tier S)", speed: "420 km/h", seat: "2 Kursi", bonus: "Full Underglow Neon", type: "Race Track", img: "/mclaren_preview.png" },
+    { name: "Porsche 911 GT3 RS (Tier A)", speed: "390 km/h", seat: "2 Kursi", bonus: "Engine Tuning Stage 3", type: "Sport", img: "/showcase_car.png" }
+  ];
+
+  // Showroom Catalog Items for Peds (Custom Character Skins)
+  const showcasePeds = [
+    { name: "Anime Character Pack (Halfped)", format: ".YTD / .YFT", features: "Dynamic Cloth Physics & Custom Emotes", type: "Kustom Anime", img: "/showcase_ped.png" },
+    { name: "Cyberpunk Streetwear Male/Female", format: ".YTD / .YFT", features: "Glow in the dark textures & custom glass specs", type: "Street Rizz", img: "/cyberpunk_preview.png" }
+  ];
 
   // Trigger auto migrations on component load
   useEffect(() => {

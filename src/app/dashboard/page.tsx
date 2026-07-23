@@ -17,7 +17,7 @@ import {
   UserCheck
 } from "lucide-react";
 
-import { supabase } from "../lib/supabase";
+import { supabase } from "../../lib/supabase";
 
 // Mock Data
 const scvpSuspects = [
