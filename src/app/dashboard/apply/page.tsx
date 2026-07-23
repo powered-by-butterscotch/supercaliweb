@@ -568,8 +568,8 @@ export default function ApplyDataForm() {
             </div>
 
             <div className="flex gap-3 justify-center max-w-md mx-auto pt-2">
-              <Link href="/dashboard?login_success=true" className="flex-1 py-3.5 rounded-xl bg-purple-600 hover:bg-purple-500 font-extrabold text-xs text-white text-center shadow-lg transition">
-                Kembali Ke Dashboard
+              <Link href={`/dashboard/warga?user=${discordUsername}`} className="flex-1 py-3.5 rounded-xl bg-purple-600 hover:bg-purple-500 font-extrabold text-xs text-white text-center shadow-lg transition">
+                Kembali Ke Dashboard Warga
               </Link>
             </div>
           </div>

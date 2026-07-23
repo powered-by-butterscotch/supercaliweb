@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
     } else if (state === "staff") {
       return NextResponse.redirect(`${protocol}://${host}/dashboard?login_success=true&role=dinas&user=${username}`);
     } else {
-      return NextResponse.redirect(`${protocol}://${host}/dashboard/apply?role=warga&user=${username}`);
+      return NextResponse.redirect(`${protocol}://${host}/dashboard/warga?user=${username}`);
     }
   } catch (error: any) {
     return NextResponse.json({ error: error.message || "Internal auth failure" }, { status: 500 });
