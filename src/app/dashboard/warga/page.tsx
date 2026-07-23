@@ -99,12 +99,21 @@ export default function WargaDashboard() {
             </p>
           </div>
 
-          <Link 
-            href={`/dashboard/apply?user=${discordUsername}`}
-            className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 font-black text-white text-xs shadow-lg shadow-purple-600/25 transition flex items-center gap-2 shrink-0"
-          >
-            <Plus className="w-4 h-4" /> Buat Permohonan Baru
-          </Link>
+          <div className="flex flex-wrap gap-3 shrink-0">
+            <Link 
+              href={`/dashboard/job?user=${discordUsername}`}
+              className="px-5 py-3.5 rounded-2xl bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 font-black text-emerald-300 text-xs shadow-lg transition flex items-center gap-2"
+            >
+              💼 Melamar Pekerjaan
+            </Link>
+
+            <Link 
+              href={`/dashboard/apply?user=${discordUsername}`}
+              className="px-5 py-3.5 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 font-black text-white text-xs shadow-lg shadow-purple-600/25 transition flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" /> Buat Permohonan Berkas
+            </Link>
+          </div>
         </div>
 
         {/* Content Section: Active Application Card & Official Document Preview */}
