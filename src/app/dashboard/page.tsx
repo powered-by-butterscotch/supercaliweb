@@ -295,17 +295,56 @@ export default function Dashboard() {
               </div>
 
               {userRole === "warga" ? (
-                <div className="p-5 rounded-2xl bg-purple-500/5 border border-purple-500/10 space-y-4 text-center">
-                  <span className="text-3xl block">🔒</span>
-                  <div className="space-y-1">
-                    <h4 className="font-bold text-sm text-white">Layanan Hanya Pegawai</h4>
-                    <p className="text-[11px] text-gray-400 leading-normal">
-                      Akun Discord Anda terdaftar sebagai **Warga Sipil**. Silakan ajukan permohonan Anda ke loket pengajuan atau hubungi petugas instansi (ARC/SCVP) yang ter-whitelist untuk menerbitkan dokumen ini.
-                    </p>
-                  </div>
-                  <Link href="/dashboard/apply" className="block w-full py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-xs font-bold text-white transition text-center shadow-md">
-                    Ke Loket Pengajuan
-                  </Link>
+                <div className="space-y-4">
+                  {/* Status Application Tracker Widget */}
+                  {applications.length > 0 ? (
+                    <div className="p-4 rounded-2xl bg-purple-600/10 border border-purple-500/30 space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-[10px] font-bold text-purple-300 tracking-wider uppercase">STATUS PERMOHONAN ANDA</span>
+                        <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase ${
+                          applications[0].status === "APPROVED" 
+                            ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" 
+                            : applications[0].status === "REJECTED"
+                              ? "bg-rose-500/20 text-rose-400 border border-rose-500/30"
+                              : "bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse"
+                        }`}>
+                          ● {applications[0].status === "APPROVED" ? "DISETUJUI (APPROVED)" : applications[0].status === "REJECTED" ? "DITOLAK (REJECTED)" : "MENUNGGU ACC (PENDING)"}
+                        </span>
+                      </div>
+
+                      <div className="space-y-1">
+                        <h4 className="font-extrabold text-sm text-white">{applications[0].sim_type}</h4>
+                        <p className="text-[11px] text-gray-300">Pemohon: <strong>{applications[0].full_name}</strong> ({applications[0].nik})</p>
+                      </div>
+
+                      {applications[0].status === "APPROVED" ? (
+                        <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 leading-relaxed font-bold">
+                          🎉 Selamat! Berkas pengajuan Anda telah disetujui oleh Petugas Instansi. Dokumen resmi Anda siap diunduh / dicetak pada lembar A4 di sebelah kanan.
+                        </div>
+                      ) : (
+                        <p className="text-[10px] text-gray-400 italic">
+                          * Berkas Anda saat ini sedang dalam antrean verifikasi oleh petugas instansi. Silakan cek berkala halaman ini.
+                        </p>
+                      )}
+
+                      <Link href="/dashboard/apply" className="block w-full py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-gray-300 text-center transition">
+                        + Buat Permohonan Baru
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className="p-5 rounded-2xl bg-purple-500/5 border border-purple-500/10 space-y-4 text-center">
+                      <span className="text-3xl block">🔒</span>
+                      <div className="space-y-1">
+                        <h4 className="font-bold text-sm text-white">Status Permohonan Dokumen</h4>
+                        <p className="text-[11px] text-gray-400 leading-normal">
+                          Anda belum memiliki permohonan dokumen aktif. Silakan ajukan permohonan Anda ke loket pengajuan untuk ditinjau oleh petugas instansi ter-whitelist.
+                        </p>
+                      </div>
+                      <Link href="/dashboard/apply" className="block w-full py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-xs font-bold text-white transition text-center shadow-md">
+                        Ke Loket Pengajuan
+                      </Link>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <>
@@ -497,15 +536,21 @@ export default function Dashboard() {
                       <tbody>
                         <tr className="border-b border-slate-200/60">
                           <td className="py-3 px-4 font-extrabold w-1/3 text-slate-500 uppercase tracking-wider">Nama Lengkap IC</td>
-                          <td className="py-3 px-4 text-slate-950 font-extrabold text-sm">{citizenName}</td>
+                          <td className="py-3 px-4 text-slate-950 font-extrabold text-sm">
+                            {userRole === "warga" && applications.length > 0 ? applications[0].full_name : citizenName}
+                          </td>
                         </tr>
                         <tr className="border-b border-slate-200/60">
                           <td className="py-3 px-4 font-extrabold text-slate-500 uppercase tracking-wider">ID UCP / Discord</td>
-                          <td className="py-3 px-4 font-mono text-slate-900 font-bold">{citizenUCP}</td>
+                          <td className="py-3 px-4 font-mono text-slate-900 font-bold">
+                            {userRole === "warga" && applications.length > 0 ? `${applications[0].discord_username} (NIK: ${applications[0].nik})` : citizenUCP}
+                          </td>
                         </tr>
                         <tr className="border-b border-slate-200/60">
-                          <td className="py-3 px-4 font-extrabold text-slate-500 uppercase tracking-wider">{customFieldLabel}</td>
-                          <td className="py-3 px-4 text-slate-950 font-bold">{customFieldValue}</td>
+                          <td className="py-3 px-4 font-extrabold text-slate-500 uppercase tracking-wider">{userRole === "warga" && applications.length > 0 ? "Golongan / Izin" : customFieldLabel}</td>
+                          <td className="py-3 px-4 text-slate-950 font-bold">
+                            {userRole === "warga" && applications.length > 0 ? applications[0].sim_type : customFieldValue}
+                          </td>
                         </tr>
                         <tr>
                           <td className="py-3 px-4 font-extrabold text-slate-500 uppercase tracking-wider">Tanggal Validasi</td>
@@ -517,7 +562,7 @@ export default function Dashboard() {
                     <div className="pt-2 font-serif text-justify">
                       <p className="font-bold text-slate-900 text-xs uppercase tracking-wider font-sans mb-2">Deskripsi / Rekomendasi Resmi:</p>
                       <p className="mt-1.5 pl-5 border-l-4 border-amber-800 italic text-slate-800 bg-[#f3efe6] p-4 rounded-xl shadow-inner font-serif leading-relaxed text-[13.5px]">
-                        &ldquo;{docDescription}&rdquo;
+                        &ldquo;{userRole === "warga" && applications.length > 0 ? (applications[0].sim_number || docDescription) : docDescription}&rdquo;
                       </p>
                     </div>
 
