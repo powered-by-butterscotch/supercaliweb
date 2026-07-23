@@ -215,13 +215,6 @@ export default function DepartmentDashboard({ params }: { params: { dept?: strin
               Masuk Portal Instansi
             </button>
           </form>
-
-          <div className="p-3 rounded-xl bg-white/5 border border-white/5 text-[10px] text-gray-400 space-y-1">
-            <p className="font-bold text-white">📌 Informasi Login Pejabat:</p>
-            {department === "police" && <p>Username: <code>kapolda_mulyono</code> | Password: <code>police123</code></p>}
-            {department === "emt" && <p>Username: <code>dr_siti_arcane</code> | Password: <code>dr_siti</code></p>}
-            {department === "doj" && <p>Username: <code>hakim_rizzler</code> | Password: <code>doj123</code></p>}
-          </div>
         </div>
       </div>
     );

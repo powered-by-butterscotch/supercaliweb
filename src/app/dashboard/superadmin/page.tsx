@@ -34,7 +34,7 @@ export default function SuperadminAccountManager() {
       setLoginError("");
       fetchData();
     } else {
-      setLoginError("Username atau Password Superadmin salah! Gunakan: admin / admin123");
+      setLoginError("Username atau Password Superadmin salah! Akses ditolak.");
     }
   };
 
@@ -166,10 +166,6 @@ export default function SuperadminAccountManager() {
               Masuk Portal Superadmin
             </button>
           </form>
-          
-          <p className="text-[10px] text-gray-500 text-center">
-            Login Bawaan: Username <code>admin</code> / Password <code>admin123</code>
-          </p>
         </div>
       </div>
     );
