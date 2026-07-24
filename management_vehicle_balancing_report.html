@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Katalog & Laporan Kalibrasi Kendaraan Supercali RP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #38bdf8;
+      --primary-hover: #0284c7;
+      --accent-s-plus: #ec4899;
+      --accent-s: #a855f7;
+      --accent-a: #3b82f6;
+      --accent-b: #10b981;
+      --accent-c: #f59e0b;
+      --accent-d: #64748b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 2rem 1rem;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    .header {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .header-title h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .header-title p { color: var(--text-muted); font-size: 1rem; }
+
+    .badge-date {
+      background-color: rgba(56, 189, 248, 0.1);
+      color: var(--primary);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .grid-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+
+    .stat-card .number { font-size: 1.875rem; font-weight: 700; color: var(--primary); margin-bottom: 0.25rem; }
+    .stat-card .label { color: var(--text-muted); font-size: 0.875rem; font-weight: 500; }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .card-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 1.25rem;
+      background-color: var(--primary);
+      border-radius: 2px;
+    }
+
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.925rem; }
+    th { background-color: rgba(15, 23, 42, 0.6); color: var(--text-muted); font-weight: 600; padding: 1rem; border-bottom: 1px solid var(--card-border); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; }
+    td { padding: 1rem; border-bottom: 1px solid rgba(51, 65, 85, 0.5); }
+    tr:hover td { background-color: rgba(255, 255, 255, 0.02); }
+
+    .tag-class {
+      display: inline-block;
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.825rem;
+      text-align: center;
+    }
+
+    .tag-s-plus { background: rgba(236, 72, 153, 0.15); color: var(--accent-s-plus); border: 1px solid rgba(236, 72, 153, 0.3); }
+    .tag-s      { background: rgba(168, 85, 247, 0.15); color: var(--accent-s); border: 1px solid rgba(168, 85, 247, 0.3); }
+    .tag-a      { background: rgba(59, 130, 246, 0.15); color: var(--accent-a); border: 1px solid rgba(59, 130, 246, 0.3); }
+    .tag-b      { background: rgba(16, 185, 129, 0.15); color: var(--accent-b); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .tag-c      { background: rgba(245, 158, 11, 0.15); color: var(--accent-c); border: 1px solid rgba(245, 158, 11, 0.3); }
+    .tag-d      { background: rgba(100, 116, 139, 0.15); color: var(--accent-d); border: 1px solid rgba(100, 116, 139, 0.3); }
+
+    .veh-chip {
+      display: inline-block;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--card-border);
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      margin: 0.2rem;
+      font-size: 0.8rem;
+    }
+
+    .veh-chip code { color: var(--primary); font-family: monospace; }
+
+    .class-section {
+      margin-bottom: 1.5rem;
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+
+    .class-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .class-section-header h3 { font-size: 1.1rem; color: #ffffff; display: flex; align-items: center; gap: 0.5rem; }
+
+    .print-btn {
+      background-color: var(--primary);
+      color: #0f172a;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .print-btn:hover { background-color: var(--primary-hover); }
+
+    @media print {
+      body { background-color: #ffffff; color: #000000; padding: 0; }
+      .card, .header, .stat-card, .class-section { background-color: #ffffff; border: 1px solid #cccccc; color: #000000; box-shadow: none; }
+      th { background-color: #f1f5f9; color: #000000; }
+      td { border-bottom: 1px solid #e2e8f0; color: #000000; }
+      .print-btn { display: none; }
+      .header-title h1 { color: #000000; }
+      .card-title { color: #000000; }
+      .veh-chip { background: #f8fafc; border: 1px solid #cbd5e1; }
+      .veh-chip code { color: #0284c7; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-title">
+        <h1>Katalog & Laporan Kalibrasi Kendaraan Supercali RP</h1>
+        <p>Rekapitulasi Lengkap 388 Kendaraan Kota Beserta Pembagian Kasta Performa & Tarif Mekanik</p>
+      </div>
+      <div>
+        <span class="badge-date">Status: Deployed & Active</span>
+        <button class="print-btn" onclick="window.print()" style="margin-left: 0.5rem;">Print / Export PDF</button>
+      </div>
+    </div>
+
+    <!-- STATS SUMMARY -->
+    <div class="grid-summary">
+      <div class="stat-card">
+        <div class="number">388</div>
+        <div class="label">Total Mobil Custom Kota</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">6 Class</div>
+        <div class="label">Kasta Performa (S++ s/d D)</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">205 MPH</div>
+        <div class="label">Limit Kecepatan S++</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">0.7x - 5.0x</div>
+        <div class="label">Multiplier Biaya Mekanik</div>
+      </div>
+    </div>
+
+    <!-- STRUKTUR KASTA SUMMARY -->
+    <div class="card">
+      <div class="card-title">Ringkasan Struktur Kasta Kecepatan & Biaya Mekanik</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Class</th>
+            <th>Kategori Kendaraan</th>
+            <th>Max Speed</th>
+            <th>Force (Acc)</th>
+            <th>Multiplier Mekanik</th>
+            <th>Jumlah Mobil</th>
+            <th>Treatment Bengkel</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tag-class tag-s-plus">S++</span></td>
+            <td>Hypercars / Limited Edition</td>
+            <td><strong>205 MPH</strong> (~330 km/h)</td>
+            <td>0.44</td>
+            <td><strong>5.0x</strong></td>
+            <td>18 Mobil</td>
+            <td>Service W16 Quad-Turbo Engine, Slick Tyres & Ceramic Brakes</td>
+          </tr>
+          <tr>
+            <td><span class="tag-class tag-s">S</span></td>
+            <td>Supercars / Exotic Sports</td>
+            <td><strong>180 MPH</strong> (~290 km/h)</td>
+            <td>0.38</td>
+            <td><strong>3.5x</strong></td>
+            <td>37 Mobil</td>
+            <td>Service V12 Engine Swap, Dual Turbo, High-end Parts</td>
+          </tr>
+          <tr>
+            <td><span class="tag-class tag-a">A</span></td>
+            <td>Sports Performance & Muscle</td>
+            <td><strong>160 MPH</strong> (~257 km/h)</td>
+            <td>0.33</td>
+            <td><strong>2.2x</strong></td>
+            <td>70 Mobil</td>
+            <td>Tuning V8 Engine Swap, Exhaust & Sport Suspension</td>
+          </tr>
+          <tr>
+            <td><span class="tag-class tag-b">B</span></td>
+            <td>Sport Coupes & Performance SUVs</td>
+            <td><strong>140 MPH</strong> (~225 km/h)</td>
+            <td>0.28</td>
+            <td><strong>1.5x</strong></td>
+            <td>47 Mobil</td>
+            <td>Service V6/I4 Turbo Engine & Bodywork</td>
+          </tr>
+          <tr>
+            <td><span class="tag-class tag-c">C</span></td>
+            <td>Executive Sedans & Standard SUVs</td>
+            <td><strong>125 MPH</strong> (~200 km/h)</td>
+            <td>0.25</td>
+            <td><strong>1.0x</strong></td>
+            <td>205 Mobil</td>
+            <td>Service harian & ganti oli standar</td>
+          </tr>
+          <tr>
+            <td><span class="tag-class tag-d">D</span></td>
+            <td>Compacts, Hatchbacks & Utility</td>
+            <td><strong>100 MPH</strong> (~160 km/h)</td>
+            <td>0.20</td>
+            <td><strong>0.7x</strong></td>
+            <td>11 Mobil</td>
+            <td>Perbaikan ekonomis & perawatan ringan</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- KATALOG LENGKAP 388 MOBIL PER KASTA -->
+    <div class="card">
+      <div class="card-title">Daftar Lengkap Kendaraan Kota Berdasarkan Class (388 Vehicles)</div>
+
+      <!-- CLASS S++ -->
+      <div class="class-section">
+        <div class="class-section-header">
+          <h3><span class="tag-class tag-s-plus">CLASS S++</span> Hypercars / Limited Edition (Limit: 205 MPH)</h3>
+          <span style="color: var(--text-muted); font-size: 0.875rem;">18 Kendaraan</span>
+        </div>
+        <div>
+          <span class='veh-chip' title='Pack: sc-cardonation ([Bugatti]) | Speed: 190 MPH'><code>2019chiron</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Koenigsegg]) | Speed: 210 MPH'><code>agerars</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 240 MPH'><code>agerars</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Bugatti]) | Speed: 250 MPH'><code>chironspeedhunter</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Bugatti]) | Speed: 255 MPH'><code>chironsuper</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 240 MPH'><code>chironsupersport22</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 240 MPH'><code>f1</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 240 MPH'><code>f1</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ferrari]) | Speed: 165 MPH'><code>f12rp</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 160 MPH'><code>GODzKSTERZOTACHA</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 240 MPH'><code>jesko</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ferrari]) | Speed: 210.5 MPH'><code>laferrariquadturbo</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Pagani]) | Speed: 210.5 MPH'><code>pagani_zonda_cinque</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Pagani]) | Speed: 210 MPH'><code>rmodpagani</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 230 MPH'><code>senna</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Lamborghini]) | Speed: 220 MPH'><code>sian</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Lamborghini]) | Speed: 246 MPH'><code>terzo</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Lamborghini]) | Speed: 220 MPH'><code>terzo1</code></span> 
+        </div>
+      </div>
+
+      <!-- CLASS S -->
+      <div class="class-section">
+        <div class="class-section-header">
+          <h3><span class="tag-class tag-s">CLASS S</span> Supercars / Exotic Sports (Limit: 180 MPH)</h3>
+          <span style="color: var(--text-muted); font-size: 0.875rem;">37 Kendaraan</span>
+        </div>
+        <div>
+          <span class='veh-chip' title='Pack: sc-cardonation ([Lamborghini]) | Speed: 190 MPH'><code>18performante</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 240 MPH'><code>18performante</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 213 MPH'><code>2f2fgtr34</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ferrari]) | Speed: 240 MPH'><code>488animated</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ferrari]) | Speed: 210 MPH'><code>488mishasp</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ferrari]) | Speed: 210 MPH'><code>488sp</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ferrari]) | Speed: 198 MPH'><code>812mnsry</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>812mnsry</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Porsche]) | Speed: 225 MPH'><code>911gtrs</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>amggtbs</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Chevrolet]) | Speed: 215 MPH'><code>c8p1</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 210 MPH'><code>contgt2011</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Bentley]) | Speed: 150 MPH'><code>contgt2011</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ferrari]) | Speed: 230 MPH'><code>ferrari812super</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Porsche]) | Speed: 200.5 MPH'><code>GODzDUKESGT2RSV2</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 230 MPH'><code>gt3hycade</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Nissan]) | Speed: 155 MPH'><code>gta5rp_veh_gtr33</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Nissan]) | Speed: 200 MPH'><code>gtr50</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Nissan]) | Speed: 225 MPH'><code>gtrh</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 240 MPH'><code>ikx3abt20</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Audi]) | Speed: 170 MPH'><code>ikx3abt20</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ferrari]) | Speed: 190.5 MPH'><code>ikx3sf90custom</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ford]) | Speed: 248 MPH'><code>manssupersnake</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 200 MPH'><code>manssupersnake</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Porsche]) | Speed: 200 MPH'><code>por911gt3</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Audi]) | Speed: 156 MPH'><code>r820</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 240 MPH'><code>r820</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Audi]) | Speed: 152 MPH'><code>r8beastedit</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Nissan]) | Speed: 240 MPH'><code>rmodgtr</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>rmodgtr</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Audi]) | Speed: 210 MPH'><code>rmodr8alpil</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 240 MPH'><code>rmodr8alpilx</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Audi]) | Speed: 240 MPH'><code>rmodr8alpilx</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Audi]) | Speed: 246 MPH'><code>rmodr8c</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Audi]) | Speed: 225 MPH'><code>rs6abt20</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>rs6rabt20</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ferrari]) | Speed: 243 MPH'><code>sf90</code></span> 
+        </div>
+      </div>
+
+      <!-- CLASS A -->
+      <div class="class-section">
+        <div class="class-section-header">
+          <h3><span class="tag-class tag-a">CLASS A</span> Sports Performance & Muscle (Limit: 160 MPH)</h3>
+          <span style="color: var(--text-muted); font-size: 0.875rem;">70 Kendaraan</span>
+        </div>
+        <div>
+          <span class='veh-chip' title='Pack: sc-cardonation ([Dodge]) | Speed: 169 MPH'><code>16charger</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>18rs7</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 240 MPH'><code>2ncsbmwm8</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 210 MPH'><code>c63hr</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Porsche]) | Speed: 160 MPH'><code>cayennemecqq</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Dodge]) | Speed: 244 MPH'><code>charger21</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Dodge]) | Speed: 243 MPH'><code>chargerf8</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 240 MPH'><code>ckbmwm4offwhite</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Dodge]) | Speed: 175 MPH'><code>demon</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>evox</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mitsubishi]) | Speed: 180 MPH'><code>evox</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Dodge]) | Speed: 230 MPH'><code>GODzDEMONUTE</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 180 MPH'><code>GODzVIPS63AMG</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 185 MPH'><code>gta5rp_veh_c63s</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Dodge]) | Speed: 210 MPH'><code>hellcatf9</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Dodge]) | Speed: 155 MPH'><code>hellcatlb</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Dodge]) | Speed: 210 MPH'><code>HellcatMagnum21</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 240 MPH'><code>m3g80</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 215 MPH'><code>m3g80mp</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 170 MPH'><code>m3mafia</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 165 MPH'><code>m3s</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 173 MPH'><code>m4c</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 215 MPH'><code>M4CC</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 210 MPH'><code>m4g82</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 160 MPH'><code>m4hr</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 220 MPH'><code>m4lb2</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>m4lb2</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 180 MPH'><code>m4speedhunter</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 195 MPH'><code>m5cs22</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 195 MPH'><code>m5e60</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 150 MPH'><code>m5prime</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 240 MPH'><code>m8benzo</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 200 MPH'><code>m8hc</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Audi]) | Speed: 165 MPH'><code>mansrs6</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 150 MPH'><code>mercec63s</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 145 MPH'><code>merse63</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ford]) | Speed: 144.094 MPH'><code>mustang65</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Chevrolet]) | Speed: 150 MPH'><code>playaturbozr1</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 200 MPH'><code>rmodcharger</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 150 MPH'><code>rmode63s</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>rmodm3e36</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 180 MPH'><code>rmodm3e36</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 165.50000305176 MPH'><code>rmodm4</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>rmodm4</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 165.30000305176 MPH'><code>rmodm4gts</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>rmodm4gts</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 240 MPH'><code>rmodm4Unikat</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>rmodmustang</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ford]) | Speed: 197.1 MPH'><code>rmodmustang</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 243 MPH'><code>rr21shelbystreet</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Audi]) | Speed: 144 MPH'><code>rs5mans</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Audi]) | Speed: 211 MPH'><code>rs615</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Audi]) | Speed: 235 MPH'><code>rs666</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Audi]) | Speed: 180.5 MPH'><code>rs6abtkit</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>rs6c8</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Audi]) | Speed: 175 MPH'><code>rs7</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Audi]) | Speed: 190 MPH'><code>rs721</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Audi]) | Speed: 220 MPH'><code>rs7beast</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Audi]) | Speed: 150 MPH'><code>rs7c821</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>rs7c821</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>rs7c8beast</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Audi]) | Speed: 205.004517 MPH'><code>rs7c8beast</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 230 MPH'><code>rs7wide</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Audi]) | Speed: 243 MPH'><code>rs7wide</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 243 MPH'><code>s63coupe</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 180 MPH'><code>s63msc</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ford]) | Speed: 95 MPH'><code>Shelbytacoma4x4</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 230 MPH'><code>taycan</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Porsche]) | Speed: 250 MPH'><code>taycanani</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Aston Martin]) | Speed: 200.5 MPH'><code>vantage23</code></span> 
+        </div>
+      </div>
+
+      <!-- CLASS B -->
+      <div class="class-section">
+        <div class="class-section-header">
+          <h3><span class="tag-class tag-b">CLASS B</span> Sport Coupes & Performance SUVs (Limit: 140 MPH)</h3>
+          <span style="color: var(--text-muted); font-size: 0.875rem;">47 Kendaraan</span>
+        </div>
+        <div>
+          <span class='veh-chip' title='Pack: sc-cardonation ([Lamborghini]) | Speed: 160 MPH'><code>1016urus</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 190 MPH'><code>16topcargle</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>2ncsx7</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Nissan]) | Speed: 150 MPH'><code>350z</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 190 MPH'><code>6x6</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 200 MPH'><code>a45</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Camaro]) | Speed: 148 MPH'><code>camaro68t</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Chevrolet]) | Speed: 225 MPH'><code>camarodragmachine</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 190 MPH'><code>escaladeprime</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Cadillac]) | Speed: 225 MPH'><code>escaladeprime</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 210 MPH'><code>g632019</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 250 MPH'><code>G63Sam</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 190 MPH'><code>g65</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 144 MPH'><code>G65</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 190 MPH'><code>g700brabusretuned</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 208 MPH'><code>g700brabusretuned</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 244 MPH'><code>g81hr</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 240 MPH'><code>g81hr</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 180 MPH'><code>g900przemo6x6</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mazda]) | Speed: 280.5 MPH'><code>GODzKRCRX7FD</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([GMC]) | Speed: 450.5 MPH'><code>GODzOOF6x6</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ford]) | Speed: 160 MPH'><code>GODzOOF6x6</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 170 MPH'><code>gta5rp_veh_gle1</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 190 MPH'><code>gta5rp_veh_gle1</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>hyundaiveloster</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 255 MPH'><code>manhartx7</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 200 MPH'><code>mansoryg63</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 240 MPH'><code>mansurus</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Audi]) | Speed: 240 MPH'><code>q8hycade</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Audi]) | Speed: 230 MPH'><code>q8prior</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 190 MPH'><code>ramtrx6x6</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 180.3 MPH'><code>rmodg65</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 190 MPH'><code>rmodg65</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Nissan]) | Speed: 215 MPH'><code>rmodskyline34</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 255 MPH'><code>rmodx6</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Camaro]) | Speed: 180.5 MPH'><code>rr21camarowide</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mazda]) | Speed: 190 MPH'><code>rx7</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mazda]) | Speed: 243 MPH'><code>rx7veilside</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 240 MPH'><code>sex6</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Lamborghini]) | Speed: 120 MPH'><code>sex6</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Nissan]) | Speed: 180 MPH'><code>silviagd</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Nissan]) | Speed: 160 MPH'><code>skyline</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 190 MPH'><code>trx</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 200 MPH'><code>Urus_Stretch_6</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>urusbeastedit</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 243 MPH'><code>x6wz</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 180 MPH'><code>zx6r</code></span> 
+        </div>
+      </div>
+
+      <!-- CLASS C -->
+      <div class="class-section">
+        <div class="class-section-header">
+          <h3><span class="tag-class tag-c">CLASS C</span> Executive Sedans & Standard SUVs (Limit: 125 MPH)</h3>
+          <span style="color: var(--text-muted); font-size: 0.875rem;">205 Kendaraan</span>
+        </div>
+        <div>
+          <span class='veh-chip' title='Pack: sc-cardonation ([Lamborghini]) | Speed: 200 MPH'><code>1016rwdevo</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>17mansorypnmr</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Porsche]) | Speed: 170 MPH'><code>17mansorypnmr</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 200 MPH'><code>2018s650p</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 133 MPH'><code>204spetro</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([GMC]) | Speed: 144 MPH'><code>21sierra</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ford]) | Speed: 325.5 MPH'><code>24mss</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mitsubishi]) | Speed: 175 MPH'><code>2f2fgts</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Renault]) | Speed: 168 MPH'><code>74civrswb</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 200 MPH'><code>77Monte</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Porsche]) | Speed: 150 MPH'><code>911turbos</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Lamborghini]) | Speed: 251 MPH'><code>amrevu23mg</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Honda]) | Speed: 230 MPH'><code>animfk8hr</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 150.65 MPH'><code>banana</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Bentley]) | Speed: 243 MPH'><code>ben17</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Bentley]) | Speed: 195 MPH'><code>bentaygam</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>bmwe39</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ford]) | Speed: 155 MPH'><code>boss302</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ford]) | Speed: 195 MPH'><code>boss429</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 200 MPH'><code>BOSS429</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Chevrolet]) | Speed: 245 MPH'><code>c8</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Chevrolet]) | Speed: 110 MPH'><code>C8WidebodyLC</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Lamborghini]) | Speed: 320 MPH'><code>carboDRCustoM</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Porsche]) | Speed: 180 MPH'><code>carrera19</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 150 MPH'><code>carsonswbc6</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>cayen19</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Porsche]) | Speed: 219.000054 MPH'><code>cayen19</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 160 MPH'><code>cb650r</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Bugatti]) | Speed: 235 MPH'><code>centuria</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Lamborghini]) | Speed: 250 MPH'><code>choilambo</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Dodge]) | Speed: 180 MPH'><code>chr20</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Honda]) | Speed: 200 MPH'><code>civic2020</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mini]) | Speed: 155 MPH'><code>cooperworks</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mitsubishi]) | Speed: 160 MPH'><code>cp9a</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Honda]) | Speed: 125 MPH'><code>cu2</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mazda]) | Speed: 255 MPH'><code>cx30wz</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ferrari]) | Speed: 210 MPH'><code>daytonasp3</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Honda]) | Speed: 145 MPH'><code>dc5</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 210 MPH'><code>DLCyber</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Dodge]) | Speed: 250 MPH'><code>dzdaytona</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 165 MPH'><code>e39touring</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>e55</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 200 MPH'><code>e92bb</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Honda]) | Speed: 137 MPH'><code>EK9</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ford]) | Speed: 200 MPH'><code>eleanor</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>eli</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mitsubishi]) | Speed: 155 MPH'><code>evo9</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mitsubishi]) | Speed: 175 MPH'><code>evo9mr</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mitsubishi]) | Speed: 220 MPH'><code>evoss</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ford]) | Speed: 405 MPH'><code>f450</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mechanic]) | Speed: 159 MPH'><code>f450c</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mechanic]) | Speed: 150 MPH'><code>f550rbc</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ferrari]) | Speed: 198 MPH'><code>f812</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ferrari]) | Speed: 295.5 MPH'><code>f8kspider</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 120 MPH'><code>fcxl</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ford]) | Speed: 175 MPH'><code>ffrs</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 240 MPH'><code>FGT</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 170 MPH'><code>firebirdwz</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Honda]) | Speed: 230 MPH'><code>fk8</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 405 MPH'><code>fmagnum</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mitsubishi]) | Speed: 195 MPH'><code>fnfmits</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 213 MPH'><code>fnfmk4</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 190 MPH'><code>fpaceprior</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Jaguar]) | Speed: 210 MPH'><code>fpaceprior</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 210 MPH'><code>fprotozwb</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Lamborghini]) | Speed: 210 MPH'><code>ftecnica</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mazda]) | Speed: 150 MPH'><code>furai</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Lamborghini]) | Speed: 250 MPH'><code>gcmlamboultimae</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Koenigsegg]) | Speed: 243 MPH'><code>gemera</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 144 MPH'><code>gl63</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 210 MPH'><code>GLK</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 190 MPH'><code>gmcev2</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([GMC]) | Speed: 168 MPH'><code>gmcev2</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ford]) | Speed: 220.5 MPH'><code>GODz67ELGT500</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 210 MPH'><code>GODz95GSX</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>GODzBMWS1000RR</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>GODzDRIFTCAT</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Dodge]) | Speed: 242 MPH'><code>GODzDRIFTCAT</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Nissan]) | Speed: 277.9 MPH'><code>GODzHYCADER34</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 245 MPH'><code>GODzRB26SUBI</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 190 MPH'><code>GODzRZRPROLFTD</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>GODzYAMR1</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 110.5 MPH'><code>gstbird1</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 160 MPH'><code>gsthoonitruck1</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 240 MPH'><code>gt17</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ford]) | Speed: 144 MPH'><code>gt17</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 150 MPH'><code>gt63</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 230 MPH'><code>gt63mt</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ferrari]) | Speed: 190 MPH'><code>gta5rp_veh_ferrari19</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Nissan]) | Speed: 210 MPH'><code>gtz34be</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Koenigsegg]) | Speed: 220 MPH'><code>gxone</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 190 MPH'><code>h2m</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Hummer]) | Speed: 160.00001525879 MPH'><code>h2m</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Dodge]) | Speed: 204 MPH'><code>HellstingerwbSC</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>hexerz2</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mitsubishi]) | Speed: 230 MPH'><code>hycadeevo</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Subaru]) | Speed: 223 MPH'><code>hycadesti</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Maserati]) | Speed: 245 MPH'><code>ikx3mc2021</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 300 MPH'><code>ikx3rebel22</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Chevrolet]) | Speed: 390 MPH'><code>impalag</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ferrari]) | Speed: 245 MPH'><code>impronta4</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mini]) | Speed: 180 MPH'><code>jcw</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mini]) | Speed: 155 MPH'><code>jcwc</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Koenigsegg]) | Speed: 230 MPH'><code>jes21</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>kawagala</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Nissan]) | Speed: 115 MPH'><code>lbwk35</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Lexus]) | Speed: 230 MPH'><code>lc500</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ford]) | Speed: 325.5 MPH'><code>lightningdually22</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 160 MPH'><code>loweyezv</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 140 MPH'><code>m135iwb</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 180 MPH'><code>m6e24</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 200 MPH'><code>mach1</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ford]) | Speed: 167 MPH'><code>mach1</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ford]) | Speed: 160 MPH'><code>mache</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ford]) | Speed: 240 MPH'><code>machewb</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>machewb</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 170 MPH'><code>mans65</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 230 MPH'><code>mansgt</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 167 MPH'><code>mayb900</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>maybach</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 165 MPH'><code>maybach</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 144 MPH'><code>mayg600p</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ford]) | Speed: 300 MPH'><code>mgt</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 246 MPH'><code>mi8</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Maserati]) | Speed: 180 MPH'><code>mlnovitec</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Tesla]) | Speed: 70 MPH'><code>model</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>model3</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Tesla]) | Speed: 100 MPH'><code>models</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>models</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Tesla]) | Speed: 100 MPH'><code>modelx</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 170 MPH'><code>modelx</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([BMW]) | Speed: 155.8 MPH'><code>mteche39</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mazda]) | Speed: 160 MPH'><code>mxpan</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mazda]) | Speed: 180 MPH'><code>na6</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Honda]) | Speed: 210 MPH'><code>nsx17</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>ocnetrongt</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Audi]) | Speed: 248.5 MPH'><code>ocnetrongt</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Honda]) | Speed: 130 MPH'><code>ody18</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 325.5 MPH'><code>owlbelair2</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Land Rover]) | Speed: 183 MPH'><code>oycdefender</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Porsche]) | Speed: 230 MPH'><code>panamturs21</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([PoleStar]) | Speed: 190 MPH'><code>polestar1</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 230 MPH'><code>polestar1</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Porsche]) | Speed: 300.199997 MPH'><code>porche911speedhunter</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 190.002869 MPH'><code>priorgt63s</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Jaguar]) | Speed: 165 MPH'><code>project8</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 240 MPH'><code>r34h</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Nissan]) | Speed: 180 MPH'><code>r355</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Nissan]) | Speed: 200 MPH'><code>r35secret</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 170 MPH'><code>rapger19</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ford]) | Speed: 144 MPH'><code>rapger19</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 190 MPH'><code>rd</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Lamborghini]) | Speed: 250 MPH'><code>revueltobeast</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Nissan]) | Speed: 150 MPH'><code>rmod240sx</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Bentley]) | Speed: 150 MPH'><code>rmodbentley1</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Fiat]) | Speed: 165.9 MPH'><code>rmodbiposto</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ferrari]) | Speed: 210 MPH'><code>rmodf40</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ford]) | Speed: 170 MPH'><code>rmodfordgt</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 178 MPH'><code>rmodgt63</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 190 MPH'><code>rmodjeepg</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 170 MPH'><code>rmodr50</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 240 MPH'><code>rmodsvj</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Lamborghini]) | Speed: 243 MPH'><code>rmodsvj</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>rmodzl1</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Camaro]) | Speed: 220 MPH'><code>rmodzl1</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 210 MPH'><code>rrghostbyv</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 130 MPH'><code>rroctane</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 130 MPH'><code>rtruck</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Audi]) | Speed: 173 MPH'><code>s1</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Nissan]) | Speed: 140 MPH'><code>s15</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 196 MPH'><code>s500w222</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 260 MPH'><code>s550kev</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Audi]) | Speed: 178 MPH'><code>s8d4</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 245 MPH'><code>scubieblob</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 250 MPH'><code>SHEL</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Lamborghini]) | Speed: 243 MPH'><code>sinacp</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 240 MPH'><code>sinacp</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>singer</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 190 MPH'><code>singer</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Subaru]) | Speed: 160 MPH'><code>subisti08</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 190 MPH'><code>suv_triaden</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 160 MPH'><code>swl</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Pagani]) | Speed: 160 MPH'><code>TCZjc</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Porsche]) | Speed: 195.1 MPH'><code>techart17</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Tesla]) | Speed: 125 MPH'><code>teslapd</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Tesla]) | Speed: 150 MPH'><code>teslaroad</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>teslaroad</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 120 MPH'><code>thewolftruck</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 120 MPH'><code>tieens</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 245 MPH'><code>topcargt63</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ford]) | Speed: 180.5 MPH'><code>ToraRTRShow</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Ford]) | Speed: 220 MPH'><code>ugcprime350</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 200 MPH'><code>unmarkedjl</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Volvo]) | Speed: 250 MPH'><code>v60hr</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>variszupra</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Porsche]) | Speed: 437 MPH'><code>venuum911</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 198 MPH'><code>w222wald</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 200 MPH'><code>waldw222</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>wraith</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Jaguar]) | Speed: 175 MPH'><code>xkgt</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 150 MPH'><code>yoti</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 255 MPH'><code>yzfr6</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 285 MPH'><code>yzfr7</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Camaro]) | Speed: 165.094 MPH'><code>zl1</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 310 MPH'><code>zx10r</code></span> 
+        </div>
+      </div>
+
+      <!-- CLASS D -->
+      <div class="class-section">
+        <div class="class-section-header">
+          <h3><span class="tag-class tag-d">CLASS D</span> Compacts, Hatchbacks & Utility (Limit: 100 MPH)</h3>
+          <span style="color: var(--text-muted); font-size: 0.875rem;">11 Kendaraan</span>
+        </div>
+        <div>
+          <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 140 MPH'><code>fortwo17</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 190 MPH'><code>FORTWO17</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 180 MPH'><code>GODz61BUS</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 99 MPH'><code>kart</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 220 MPH'><code>kart</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Mercedes]) | Speed: 155 MPH'><code>mlbrabus</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 220 MPH'><code>RYGBus</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 240 MPH'><code>RYGBus</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 190 MPH'><code>van_blacklions</code></span> <span class='veh-chip' title='Pack: sc-cars | Speed: 190 MPH'><code>van_vagos</code></span> <span class='veh-chip' title='Pack: sc-cardonation ([Others]) | Speed: 110 MPH'><code>vanzwb06</code></span> 
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</body>
+</html>

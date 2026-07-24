@@ -79,6 +79,8 @@ export default function Dashboard() {
   // Dynamic Real-time DB State
   const [donations, setDonations] = useState<DonationInvoice[]>([]);
   const [applications, setApplications] = useState<WhitelistApplication[]>([]);
+  const [vehicles, setVehicles] = useState<any[]>([]);
+  const [vehicleSearch, setVehicleSearch] = useState("");
 
   // Document states
   const [citizenName, setCitizenName] = useState("Ucup Slebew");
@@ -109,6 +111,7 @@ export default function Dashboard() {
         }
         fetchDonations();
         fetchApplications();
+        fetchVehicles();
       } else {
         // Redirect to Discord portal
         window.location.href = "/dashboard/login";
@@ -116,11 +119,23 @@ export default function Dashboard() {
       }
 
       const tab = params.get("tab");
-      if (tab && ["docs", "scvp", "arc", "rizz", "admin"].includes(tab)) {
+      if (tab && ["docs", "scvp", "arc", "rizz", "vehicles", "admin"].includes(tab)) {
         setActiveTab(tab);
       }
     }
   }, []);
+
+  const fetchVehicles = async () => {
+    try {
+      const res = await fetch("/api/vehicles");
+      if (res.ok) {
+        const data = await res.json();
+        setVehicles(data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const fetchDonations = async () => {
     const { data, error } = await supabase
@@ -275,6 +290,12 @@ export default function Dashboard() {
             className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 ${activeTab === "rizz" ? "bg-amber-600 text-white shadow" : "text-gray-400 hover:text-white"}`}
           >
             <Wrench className="w-3.5 h-3.5" /> Rizz Catalog
+          </button>
+          <button 
+            onClick={() => setActiveTab("vehicles")}
+            className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 ${activeTab === "vehicles" ? "bg-emerald-600 text-white shadow" : "text-gray-400 hover:text-white"}`}
+          >
+            🏎️ Vehicle Balancing
           </button>
           
           {/* Admin Whitelist Tab (Visible to dinas/admin roles, locked for warga) */}
@@ -828,6 +849,121 @@ export default function Dashboard() {
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 5: MANAGEMENT VEHICLE BALANCING REPORT */}
+        {activeTab === "vehicles" && (
+          <div className="space-y-6">
+            <div className="glass rounded-3xl p-6 border border-emerald-500/20 space-y-6">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/5 pb-4">
+                <div>
+                  <h3 className="font-extrabold text-lg text-white flex items-center gap-2">
+                    🏎️ Management Vehicle Balancing Report
+                  </h3>
+                  <p className="text-xs text-gray-400">Laporan penyesuaian handling, top speed, serta status nerf/buff kendaraan kota Supercali.</p>
+                </div>
+
+                <div className="flex items-center gap-3 w-full sm:w-auto">
+                  <div className="relative flex-1 sm:w-64">
+                    <Search className="absolute left-3.5 top-2.5 w-4 h-4 text-gray-500" />
+                    <input 
+                      type="text"
+                      placeholder="Cari model mobil / class..."
+                      value={vehicleSearch}
+                      onChange={(e) => setVehicleSearch(e.target.value)}
+                      className="w-full pl-10 pr-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white outline-none focus:border-emerald-500"
+                    />
+                  </div>
+
+                  {(userRole === "dinas" || userRole === "admin") && (
+                    <button 
+                      onClick={async () => {
+                        const model = prompt("Masukkan Nama / Model Mobil:");
+                        if (!model) return;
+                        const vClass = prompt("Klasifikasi Mobil (Sports/Muscle/Supercar/Emergency):", "Sports");
+                        const speed = prompt("Top Speed (mph):", "135");
+                        const status = prompt("Status Balancing (BALANCED / NERFED / BUFFED / UNDER_REVIEW):", "BALANCED");
+                        const notes = prompt("Catatan Perubahan / Balancing Note:", "Penyesuaian baru");
+
+                        await fetch("/api/vehicles", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({
+                            model_name: model,
+                            vehicle_class: vClass,
+                            top_speed_mph: speed,
+                            balance_status: status,
+                            nerf_buff_note: notes
+                          })
+                        });
+                        fetchVehicles();
+                      }}
+                      className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 font-bold text-white text-xs shrink-0 transition flex items-center gap-1.5 shadow-lg shadow-emerald-600/20"
+                    >
+                      <Plus className="w-3.5 h-3.5" /> Tambah Mobil
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Vehicle Report Grid / Table */}
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-white/10 text-gray-400 uppercase font-bold tracking-wider">
+                      <th className="pb-3 w-1/4">Model Mobil</th>
+                      <th className="pb-3 w-1/6">Klasifikasi</th>
+                      <th className="pb-3 w-1/6">Top Speed & Drive</th>
+                      <th className="pb-3 w-1/6">Status Balancing</th>
+                      <th className="pb-3 w-1/4">Catatan Perubahan</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {vehicles
+                      .filter((v: any) => 
+                        (v.model_name || "").toLowerCase().includes(vehicleSearch.toLowerCase()) ||
+                        (v.vehicle_class || "").toLowerCase().includes(vehicleSearch.toLowerCase())
+                      )
+                      .map((veh: any) => (
+                        <tr key={veh.id} className="border-b border-white/5 hover:bg-white/5 transition">
+                          <td className="py-4 font-bold text-white">
+                            <span className="block text-sm text-white font-extrabold">{veh.model_name}</span>
+                            <span className="text-[10px] text-emerald-400 font-mono">Estimasi IC: {veh.price_ic || "$100,000"}</span>
+                          </td>
+                          <td className="py-4">
+                            <span className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-gray-300 text-[10px] font-bold">
+                              {veh.vehicle_class}
+                            </span>
+                          </td>
+                          <td className="py-4 font-mono">
+                            <span className="font-extrabold text-amber-300 block">{veh.top_speed_mph} MPH</span>
+                            <span className="text-[10px] text-gray-400">{veh.drivetrain || "RWD"} | Handling: {veh.handling_score || "8/10"}</span>
+                          </td>
+                          <td className="py-4">
+                            <span className={`px-2.5 py-1 rounded-full text-[9px] font-black uppercase border ${
+                              veh.balance_status === "BALANCED" 
+                                ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
+                                : veh.balance_status === "NERFED"
+                                  ? "bg-rose-500/20 text-rose-400 border-rose-500/30"
+                                  : veh.balance_status === "BUFFED"
+                                    ? "bg-cyan-500/20 text-cyan-300 border-cyan-500/30"
+                                    : "bg-amber-500/20 text-amber-300 border-amber-500/30 animate-pulse"
+                            }`}>
+                              ● {veh.balance_status}
+                            </span>
+                          </td>
+                          <td className="py-4 text-gray-300 leading-relaxed italic text-[11px]">
+                            &ldquo;{veh.nerf_buff_note || "Spesifikasi standar kota."}&rdquo;
+                            <span className="block text-[9px] text-gray-500 not-italic mt-0.5">Updated: {veh.last_updated}</span>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+
             </div>
           </div>
         )}
